@@ -1,0 +1,6 @@
+chromadb
+data-chunker
+langchain
+llm-prompt-creator
+openai
+tiktoken
