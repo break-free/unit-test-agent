@@ -6,9 +6,18 @@ from langchain.vectorstores import Chroma
 from pydantic import BaseModel, BaseSettings, Field
 from typing import Type
 
+# Fields used in schemas
+COLLECTION_NAME: str = Field( default = "code_store", description = "the name of the collection in the Chroma DB" )
+DIRECTORY: str = Field( default = ".", description = "where the code is located" )
+TEXT: str = Field( default = "", description = "text to search for" )
+
 class VectorstoreSchema(BaseModel):
-    directory: str = Field( default = ".", description = "where the code is located" )
-    collection_name: str = Field( default = "code_store", description = "the name of the collection in the Chroma DB" )
+    directory: str = DIRECTORY
+    collection_name: str = COLLECTION_NAME
+
+class VectorstoreSimilaritySearchSchema(BaseModel):
+    collection_name: str = COLLECTION_NAME
+    text: str = TEXT
 
 class ConfirmVectorstoreCollectionIsEmpty(BaseTool, BaseSettings):
     name = "Confirm Vectorstore Collection Is Empty"
@@ -82,4 +91,23 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
         return "Vectorstore created and populated with data."
 
     def _arun(self, directory:str):
+        raise NotImplementedError("This tool does not support async")
+
+class SimilaritySearchVectorstore(BaseTool, BaseSettings):
+
+    name = "Similarity search in vector store"
+    description = "use this tool to search a vector store collection for text"
+    args_schema: Type[VectorstoreSimilaritySearchSchema] = VectorstoreSimilaritySearchSchema
+    embedding_model: str = "text-embedding-ada-002"
+    persist_directory: str = "db"
+
+    def _run(self, collection_name: str, text: str):
+
+        store = Chroma(collection_name=collection_name,
+                       embedding_function=OpenAIEmbeddings(model=self.embedding_model),
+                       persist_directory=self.persist_directory)
+
+        return store.similarity_search(query=text, k=1)
+
+    def _arun(self, collection_name: str, text: str):
         raise NotImplementedError("This tool does not support async")

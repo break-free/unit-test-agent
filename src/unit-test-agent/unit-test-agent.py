@@ -1,3 +1,4 @@
+import chains
 from glob import glob
 import indexer
 import json
@@ -12,7 +13,7 @@ from typing import Optional
 llm = ChatOpenAI(
     openai_api_key=os.environ['OPENAI_API_KEY'],
     temperature=0,
-    model_name='gpt-3.5-turbo'
+    model_name='gpt-4'
 )
 
 # initialize conversational memory
@@ -24,7 +25,9 @@ conversational_memory = ConversationBufferWindowMemory(
 
 tools = [tools.DummyTestCoverage(),
          indexer.ConfirmVectorstoreCollectionIsEmpty(),
-         indexer.GetOrCreateVectorstore()]
+         indexer.GetOrCreateVectorstore(),
+         indexer.SimilaritySearchVectorstore(),
+         chains.CreateUnitTest()]
 
 # initialize agent with tools
 agent = initialize_agent(
@@ -32,11 +35,13 @@ agent = initialize_agent(
     tools=tools,
     llm=llm,
     verbose=True,
-    max_iterations=3,
+    max_iterations=5,
     early_stopping_method='generate',
     memory=conversational_memory
 )
 
-agent("Determine what methods require additional testing. " +
+agent("Determine what method requires additional testing. " +
       "Confirm if the local vectorstore is empty. " +
-      "If the local vectorstore is empty create it using the directory `/var/home/chris/Projects/unit-test-agent/training/test`, otherwise use it as is.")
+      "If the local vectorstore is empty create it using the directory `/var/home/chris/Projects/unit-test-agent/training/test`, otherwise use it as is. " +
+      "Search the vectorstore for the method's code. " +
+      "Use the method's code as context to create a unit test. ")
