@@ -7,8 +7,8 @@ from pydantic import BaseModel, BaseSettings, Field
 from typing import Type
 
 # Fields used in schemas
-COLLECTION_NAME: str = Field( default = "code_store", description = "the name of the collection in the Chroma DB" )
-DIRECTORY: str = Field( default = ".", description = "where the code is located" )
+COLLECTION_NAME: str = Field( default = "code_store", description = "the collection name in the Chroma DB" )
+DIRECTORY: str = Field( default = ".", description = "the directory where the code is located" )
 TEXT: str = Field( default = "", description = "text to search for" )
 
 class VectorstoreSchema(BaseModel):
@@ -22,7 +22,7 @@ class VectorstoreSimilaritySearchSchema(BaseModel):
 class ConfirmVectorstoreCollectionIsEmpty(BaseTool, BaseSettings):
     name = "Confirm Vectorstore Collection Is Empty"
     description = (
-        "use this tool to confirm is a vectorstore and its associated collection are empty"
+        "use this tool to confirm if a vectorstore and its associated collection are empty"
     )
     args_schema: Type[VectorstoreSchema] = VectorstoreSchema
     embedding_model: str = "text-embedding-ada-002"
@@ -45,7 +45,7 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
 
     name = "Get or Create Vectorstore"
     description = (
-        "use this tool to either create or get a Vectorstore from a provided folder containing a codebase"
+        "use this tool to either create or get a Vectorstore using a provided directory containing a codebase"
         )
     args_schema: Type[VectorstoreSchema] = VectorstoreSchema
     embedding_model: str = "text-embedding-ada-002"
