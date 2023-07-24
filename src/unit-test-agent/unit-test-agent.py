@@ -23,11 +23,14 @@ conversational_memory = ConversationBufferWindowMemory(
     return_messages=True
 )
 
+# Create toolkits
+#chains_toolkit = ChainsToolkit(llm)
+
 tools = [tools.DummyTestCoverage(),
          indexer.ConfirmVectorstoreCollectionIsEmpty(),
          indexer.GetOrCreateVectorstore(),
          indexer.SimilaritySearchVectorstore(),
-         chains.CreateUnitTest()]
+         chains.CreateUnitTest(llm)]
 
 # initialize agent with tools
 agent = initialize_agent(
@@ -35,13 +38,8 @@ agent = initialize_agent(
     tools=tools,
     llm=llm,
     verbose=True,
-    max_iterations=5,
-    early_stopping_method='generate',
-    memory=conversational_memory
+    memory=conversational_memory,
+    return_intermediate_step=True
 )
 
-agent("Determine what method requires additional testing. " +
-      "Confirm if the local vectorstore is empty. " +
-      "If the local vectorstore is empty create it using the directory `/var/home/chris/Projects/unit-test-agent/training/test`, otherwise use it as is. " +
-      "Search the vectorstore for the method's code. " +
-      "Use the method's code as context to create a unit test. ")
+agent("Create one test class and as many unit tests as needed for each method reported by the test coverage tool. Use the local vectorstore to retrieve information on the method and its class as often as needed, selecting only code that is most relevant to unit test creation. If the vectorstore is empty, populate the vectorstore with code from the following directory '/var/home/chris/Projects/unit-test-agent/training/test'. ")

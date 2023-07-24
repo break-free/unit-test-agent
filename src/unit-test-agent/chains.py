@@ -14,12 +14,17 @@ LLM: BaseLanguageModel = Field( default = None, description = "the LLM to be use
 class CreateUnitTest(BaseTool):
     name = "Create Unit Test"
     description = (
-        "use this tool only to create unit tests from provided code context."
+        "use this tool to create a test class and unit tests for a code segment."
     )
+    llm: BaseLanguageModel = None
+
+    def __init__(self, llm: BaseLanguageModel):
+        super().__init__()
+        self.llm = llm
 
     def _run(self, code:str):
 
-        promptTemplate = """You are a world-class Java developer with an eagle eye for unintended bugs and edge cases. You carefully explain code with great detail and accuracy. You write careful, accurate unit tests. You only reply with commented code in a single block, ready for saving to file. A good unit test should:
+        promptTemplate = """You are a world-class Java developer with an eagle eye for unintended bugs and edge cases. You carefully explain code with great detail and accuracy. You write careful, accurate unit tests. You only reply with code in a single block, without Markdown, and ready for saving to file. A good unit test should:
         - Test the function's behavior for a wide range of possible inputs
         - Test edge cases that the author may not have foreseen
         - Be easy to read and understand, with clean code and descriptive names
@@ -30,13 +35,7 @@ class CreateUnitTest(BaseTool):
         """
 
         prompt = Prompt(template=promptTemplate, input_variables=["context"])
-        # initialize LLM (we use ChatOpenAI because we'll later define a `chat` agent)
-        llm = ChatOpenAI(
-            openai_api_key=os.environ['OPENAI_API_KEY'],
-            temperature=0,
-            model_name='gpt-4'
-        )
-        llmChain = LLMChain(prompt=prompt, llm=llm)
+        llmChain = LLMChain(prompt=prompt, llm=self.llm)
 
         return str(llmChain.predict(prompt=prompt,
                                     context=code) )

@@ -107,7 +107,7 @@ class SimilaritySearchVectorstore(BaseTool, BaseSettings):
                        embedding_function=OpenAIEmbeddings(model=self.embedding_model),
                        persist_directory=self.persist_directory)
 
-        return store.similarity_search(query=text, k=1)
+        return store.similarity_search(query=text, k=5)
 
     def _arun(self, collection_name: str, text: str):
         raise NotImplementedError("This tool does not support async")
