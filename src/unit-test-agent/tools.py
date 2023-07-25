@@ -5,7 +5,7 @@ from typing import Type
 class DummyTestCoverage(BaseTool):
     name = "File Test Coverage Tool"
     description = (
-        "use this tool to obtain methods from classes within the codebase that require testing in JSON format"
+        "use this tool to query for methods from classes within the codebase that require testing in JSON format"
     )
 
     def _run(self, query:str):
