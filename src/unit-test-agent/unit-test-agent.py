@@ -1,13 +1,10 @@
 import chains
-from glob import glob
 import indexer
-import json
 from langchain.agents import initialize_agent, AgentType
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.chat_models import ChatOpenAI
 import os
 import tools
-from typing import Optional
 
 # initialize LLM (we use ChatOpenAI because we'll later define a `chat` agent)
 llm = ChatOpenAI(
@@ -22,9 +19,6 @@ conversational_memory = ConversationBufferWindowMemory(
     k=5,
     return_messages=True
 )
-
-# Create toolkits
-#chains_toolkit = ChainsToolkit(llm)
 
 tools = [tools.DummyTestCoverage(),
          indexer.ConfirmVectorstoreCollectionIsEmpty(),
