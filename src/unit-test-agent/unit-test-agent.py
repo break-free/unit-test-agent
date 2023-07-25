@@ -31,7 +31,7 @@ tools = [tools.DummyTestCoverage(),
          indexer.GetOrCreateVectorstore(),
          indexer.SimilaritySearchVectorstore(),
          chains.CreateUnitTest(llm),
-         tools.SaveToFile()]
+         tools.SaveToNewFile()]
 
 # initialize agent with tools
 agent = initialize_agent(

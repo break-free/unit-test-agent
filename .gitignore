@@ -1,5 +1,6 @@
 # Local package files
 **/db/*
+**/*Test.java
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

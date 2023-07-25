@@ -1,4 +1,5 @@
 from langchain.tools import BaseTool
+import os
 from pydantic import BaseModel, BaseSettings, Field
 from typing import Type
 
@@ -15,20 +16,26 @@ class DummyTestCoverage(BaseTool):
         raise NotImplementedError("This tool does not support async")
 
 class SaveToFileSchema(BaseModel):
-    file_name: str = Field( default = "/tmp/ChangeFileName.txt", description = "file name including directory of where to save to disk")
+    file_path: str = Field( default = "/tmp/ChangeFileName.txt", description = "file path including directory of where to save to disk and the file name")
     content: str = Field( default = "", description = "the content that will be saved to the file" )
 
-class SaveToFile(BaseTool):
-    name = "Save To File Tool"
+class SaveToNewFile(BaseTool):
+    name = "Save To New File Tool"
     description = (
         "use this tool to save code or text to disk using a specified file name"
     )
     args_schema: Type[SaveToFileSchema] = SaveToFileSchema
 
-    def _run(self, file_name: str, content: str):
-        print("File name: " + file_name)
+    def _run(self, file_path: str, content: str):
+        print("File name: " + file_path)
         print("Content: " + content)
-        return "File '" + str(file_name) + "' saved, yay!"
 
-    def _arun(self, file_name: str, content: str):
+        if os.path.isfile(file_path):
+            if os.path.getsize(file_path) > 0:
+                return "File '" + str(file_path) + "' exists and contains content!"
+        with open(file_path, 'w') as f:
+            f.write(content)
+        return "File '" + str(file_path) + "' saved."
+
+    def _arun(self, file_path: str, content: str):
         raise NotImplementedError("This tool does not support async")
