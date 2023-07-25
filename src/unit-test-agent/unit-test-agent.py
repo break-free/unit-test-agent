@@ -43,4 +43,4 @@ agent = initialize_agent(
     return_intermediate_step=True
 )
 
-agent("Create one test class and as many unit tests as needed for each method reported by the test coverage tool. Use the local vectorstore to retrieve information on the method and its class as often as needed, selecting only code that is most relevant to unit test creation. If the vectorstore is empty, populate the vectorstore with code from the following directory '/var/home/chris/Projects/unit-test-agent/training/test'. Once created, the test class should be saved to disk using an appropriate file name. ")
+agent("Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '/var/home/chris/Projects/fineract/fineract-client'. Once created, the test class should be saved to disk using an appropriate file name. ")

@@ -61,7 +61,6 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
         if store._collection.count() != 0:
             return "Vectorstore already contains items therefore using as is."
 
-        print(directory)
         training_data = JCParser.get_file_list(directory, "*.java")
         chunks = []
         failed_files = []

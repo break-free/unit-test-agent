@@ -10,7 +10,7 @@ class DummyTestCoverage(BaseTool):
     )
 
     def _run(self, query:str):
-        return '{ class: "AccountType", method: "fromInt" }'
+        return '{ class: "Parts", method: "fromFile" }'
 
     def _arun(self, query:str):
         raise NotImplementedError("This tool does not support async")
