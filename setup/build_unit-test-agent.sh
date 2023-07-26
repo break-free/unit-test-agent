@@ -15,7 +15,7 @@ toolbox rm --force $NAME || true
 toolbox create --container $NAME
 
 # Install applications
-APPLICATIONS=" cmake gcc-c++ java-17-openjdk-devel junit python3-pandas python3-javalang "
+APPLICATIONS=" cmake gcc-c++ python3-pandas python3-javalang "
 
 ## Install applications
 $RUN sudo dnf install -y $APPLICATIONS;
