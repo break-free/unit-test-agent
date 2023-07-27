@@ -1,13 +1,10 @@
 import chains
-from glob import glob
 import indexer
-import json
 from langchain.agents import initialize_agent, AgentType
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.chat_models import ChatOpenAI
 import os
 import tools
-from typing import Optional
 
 # initialize LLM (we use ChatOpenAI because we'll later define a `chat` agent)
 llm = ChatOpenAI(
@@ -23,15 +20,13 @@ conversational_memory = ConversationBufferWindowMemory(
     return_messages=True
 )
 
-# Create toolkits
-#chains_toolkit = ChainsToolkit(llm)
-
 tools = [tools.DummyTestCoverage(),
          indexer.ConfirmVectorstoreCollectionIsEmpty(),
          indexer.GetOrCreateVectorstore(),
          indexer.SimilaritySearchVectorstore(),
          chains.CreateUnitTest(llm),
-         tools.SaveToNewFile()]
+         tools.SaveToNewFile(),
+         tools.RunTestSuiteTool()]
 
 # initialize agent with tools
 agent = initialize_agent(
@@ -43,4 +38,9 @@ agent = initialize_agent(
     return_intermediate_step=True
 )
 
-agent("Create one test class and as many unit tests as needed for each method reported by the test coverage tool. Use the local vectorstore to retrieve information on the method and its class as often as needed, selecting only code that is most relevant to unit test creation. If the vectorstore is empty, populate the vectorstore with code from the following directory '/var/home/chris/Projects/unit-test-agent/training/test'. Once created, the test class should be saved to disk using an appropriate file name. ")
+# TODO: Note that the directory is hard-coded; needs to be a parameter passed into this file, or
+#       the agent is converted into a class/function.
+# agent("Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '/var/home/chris/Projects/fineract/fineract-client'. Once created, the test class should be saved to disk using an appropriate file name and then tested. ")
+
+# Testing prompts for different tools, and to save time!!!
+agent("Run the test suite tool.")

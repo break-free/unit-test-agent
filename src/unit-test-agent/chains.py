@@ -1,28 +1,37 @@
 from langchain import LLMChain
 from langchain.base_language import BaseLanguageModel
-from langchain.chat_models import ChatOpenAI
 from langchain.prompts import Prompt
-from langchain.tools import BaseTool, StructuredTool
-import os
-from pydantic import BaseModel, BaseSettings, Field
+from langchain.tools import BaseTool
+from pydantic import BaseModel, Field
 from typing import Type
 
-# Fields used in StructuredTool schemas
-CODE: str = Field( default = "", description = "the code that can be used to create a unit test")
-LLM: BaseLanguageModel = Field( default = None, description = "the LLM to be used to assist with creating tests")
+# Fields used in schemas
+CLASS_NAME: str = Field(default="", description="the name of the class to be tested")
+CODE: str = Field(default="", description="the code that can be used to create a unit test")
+LLM: BaseLanguageModel = Field(default=None,
+                               description="the LLM to be used to assist with creating tests")
+PACKAGE_NAME: str = Field(default="", description="the package that the test class must belong to")
+
+
+class CreateUnitTestSchema(BaseModel):
+    package_name: str = PACKAGE_NAME
+    class_name: str = CLASS_NAME
+    code: str = CODE
+
 
 class CreateUnitTest(BaseTool):
     name = "Create Unit Test"
     description = (
         "use this tool to create a test class and unit tests for a code segment."
     )
+    args_schema: Type[CreateUnitTestSchema] = CreateUnitTestSchema
     llm: BaseLanguageModel = None
 
     def __init__(self, llm: BaseLanguageModel):
         super().__init__()
         self.llm = llm
 
-    def _run(self, code:str):
+    def _run(self, package_name: str, class_name: str, code: str):
 
         promptTemplate = """You are a world-class Java developer with an eagle eye for unintended bugs and edge cases. You carefully explain code with great detail and accuracy. You write careful, accurate unit tests. You only reply with well-commented code in a single block, without Markdown, and ready for saving to file. A good unit test should:
         - Test the function's behavior for a wide range of possible inputs
@@ -31,15 +40,21 @@ class CreateUnitTest(BaseTool):
         - Be deterministic, so that the tests always pass or fail in the same way
         Use the following pieces of CodeContext to create a unit test.
         ---
+        PackageName: {package_name}
+        ---
+        ClassName: {class_name}
+        ---
         CodeContext: {context}
         """
 
-        prompt = Prompt(template=promptTemplate, input_variables=["context"])
+        prompt = Prompt(template=promptTemplate,
+                        input_variables=["package_name", "class_name", "context"])
         llmChain = LLMChain(prompt=prompt, llm=self.llm)
 
         return str(llmChain.predict(prompt=prompt,
-                                    context=code) )
+                                    package_name=package_name,
+                                    class_name=class_name,
+                                    context=code))
 
-
-    def _arun(self, code:str):
+    def _arun(self, code: str):
         raise NotImplementedError("This tool does not support async")
