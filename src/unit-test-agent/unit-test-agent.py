@@ -25,7 +25,8 @@ tools = [tools.DummyTestCoverage(),
          indexer.GetOrCreateVectorstore(),
          indexer.SimilaritySearchVectorstore(),
          chains.CreateUnitTest(llm),
-         tools.SaveToNewFile()]
+         tools.SaveToNewFile(),
+         tools.RunTestSuiteTool()]
 
 # initialize agent with tools
 agent = initialize_agent(
@@ -37,4 +38,5 @@ agent = initialize_agent(
     return_intermediate_step=True
 )
 
-agent("Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '/var/home/chris/Projects/fineract/fineract-client'. Once created, the test class should be saved to disk using an appropriate file name. ")
+# agent("Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '/var/home/chris/Projects/fineract/fineract-client'. Once created, the test class should be saved to disk using an appropriate file name and then tested. ")
+agent("Run the test suite tool.")

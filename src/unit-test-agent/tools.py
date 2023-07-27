@@ -1,6 +1,7 @@
 from langchain.tools import BaseTool
 import os
 from pydantic import BaseModel, Field
+import subprocess
 from typing import Type
 
 
@@ -47,4 +48,24 @@ class SaveToNewFile(BaseTool):
         return "File '" + str(file_path) + "' saved."
 
     def _arun(self, file_path: str, content: str):
+        raise NotImplementedError("This tool does not support async")
+
+
+class RunTestSuiteTool(BaseTool):
+    name = "Run Test Suite Tool"
+    description = (
+        "use this tool to run the test suite and obtain results about failures, errors, and exceptions"
+    )
+
+    def _run(self):
+        # TODO: The following command is fixed and uneditable; need to make it something we can pass to the tool
+        process = subprocess.run(["/var/home/chris/Projects/unit-test-agent/src/run_gradle.sh"],
+                                 capture_output=True,
+                                 text=True)
+        if process.returncode != 0:
+            return "Errors were encountered\n\n" + process.stderr
+        else:
+            return "The output from the test suite is below:" + process.stdout
+
+    def _arun(self):
         raise NotImplementedError("This tool does not support async")

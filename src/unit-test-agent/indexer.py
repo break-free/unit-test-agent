@@ -16,11 +16,16 @@ TEXT: str = Field(default="",
 
 
 class VectorstoreSchema(BaseModel):
+
+    # TODO: Replace these two with an actual vector store but still populate it by the agent. This
+    #       way we can reuse the schema for an agent that updates the store.
     directory: str = DIRECTORY
     collection_name: str = COLLECTION_NAME
 
 
 class VectorstoreSimilaritySearchSchema(BaseModel):
+
+    # TODO: Replace the first variable with a vector store
     collection_name: str = COLLECTION_NAME
     text: str = TEXT
 
@@ -32,6 +37,9 @@ class ConfirmVectorstoreCollectionIsEmpty(BaseTool, BaseSettings):
         )
     args_schema: Type[VectorstoreSchema] = VectorstoreSchema
     embedding_model: str = "text-embedding-ada-002"
+
+    # TODO: Use a temporary file location, e.g., /tmp/db, to store the vector store as the
+    #       default.
     persist_directory: str = "db"
 
     def _run(self, directory: str, collection_name: str):
@@ -53,9 +61,12 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
     description = (
         "use this tool to either create or get a Vectorstore using a provided directory containing "
         "a codebase"
-        )
+    )
     args_schema: Type[VectorstoreSchema] = VectorstoreSchema
     embedding_model: str = "text-embedding-ada-002"
+
+    # TODO: Use a temporary file location, e.g., /tmp/db, to store the vector store as the
+    #       default.
     persist_directory: str = "db"
 
     def _run(self, directory: str, collection_name: str):
@@ -67,7 +78,11 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
         if store._collection.count() != 0:
             return "Vectorstore already contains items therefore using as is."
 
-        training_data = JCParser.get_file_list(directory, "*.java")
+        # TODO: The `+ "/src/main" is a hack to prevent this tool parsing all *.java files from
+        #       both `main`, `test`, and `build` directories under `src` ; it needs to be updated
+        #       with a better parameter, either here or in the calling agent.
+        training_data = JCParser.get_file_list(directory + "/src/main", "*.java")
+
         chunks = []
         failed_files = []
         for file in training_data:
@@ -78,10 +93,13 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
                 failed_files.append(str(file) + ": " + str(e))
             if tree is not None:
                 try:
+
+                    # TODO: Replace with `chunk_all` function when available.
                     chunks = chunks + JCChunker.chunk_constants(tree)
                     chunks = chunks + JCChunker.chunk_constructors(tree, codelines)
                     chunks = chunks + JCChunker.chunk_fields(tree, codelines)
                     chunks = chunks + JCChunker.chunk_methods(tree, codelines)
+
                 except JCChunker.ChunkingError as e:
                     failed_files.append(str(file) + ": " + str(e))
             else:
@@ -104,6 +122,9 @@ class SimilaritySearchVectorstore(BaseTool, BaseSettings):
     description = "use this tool to search a vector store collection for text"
     args_schema: Type[VectorstoreSimilaritySearchSchema] = VectorstoreSimilaritySearchSchema
     embedding_model: str = "text-embedding-ada-002"
+
+    # TODO: Use a temporary file location, e.g., /tmp/db, to store the vector store as the
+    #       default.
     persist_directory: str = "db"
 
     def _run(self, collection_name: str, text: str):
