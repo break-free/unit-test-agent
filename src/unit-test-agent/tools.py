@@ -58,14 +58,35 @@ class RunTestSuiteTool(BaseTool):
     )
 
     def _run(self):
-        # TODO: The following command is fixed and uneditable; need to make it something we can pass to the tool
+
+        # TODO: This is a "hack" function added by necessity to remove additional lines and keep
+        #       context minimal. Ideally, the test suite output would be changed to reflect needs,
+        #       rather than doing it here!
+        def filter_words_whitespace(text: str, filter_words: list[str]):
+            # Split string by new line character.
+            lines = text.split('\n')
+            # Search for words in the provided list of words.
+            filtered_lines = [line for line in lines if not any(word in line for word in filter_words)]
+            # Remove any lines with only white space.
+            nil_whitespace_lines = [line for line in filtered_lines if line.strip() != ""]
+            # Return the joined string.
+            return '\n'.join(nil_whitespace_lines)
+
+        # TODO: The following command is fixed and uneditable; need to make it so the binary can be
+        #       altered as needed
         process = subprocess.run(["/var/home/chris/Projects/unit-test-agent/src/run_gradle.sh"],
                                  capture_output=True,
                                  text=True)
         if process.returncode != 0:
-            return "Errors were encountered\n\n" + process.stderr
+            filter_words = ['warning', 'WARNING', 'deprecated', 'BusinessDate', 'cucumber.core',
+                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a']
+            return "Errors were encountered\n\n" + filter_words_whitespace(process.stderr,
+                                                                           filter_words)
         else:
-            return "The output from the test suite is below:" + process.stdout
+            filter_words = ['WARNING', 'warning', 'deprecated', 'BusinessDate', 'cucumber.core',
+                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a']
+            return "Test suite output:\n\n" + filter_words_whitespace(process.stderr,
+                                                                      filter_words)
 
     def _arun(self):
         raise NotImplementedError("This tool does not support async")
