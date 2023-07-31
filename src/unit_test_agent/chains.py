@@ -8,8 +8,6 @@ from typing import Type
 # Fields used in schemas
 CLASS_NAME: str = Field(default="", description="the name of the class to be tested")
 CODE: str = Field(default="", description="the code that can be used to create a unit test")
-LLM: BaseLanguageModel = Field(default=None,
-                               description="the LLM to be used to assist with creating tests")
 PACKAGE_NAME: str = Field(default="", description="the package that the test class must belong to")
 
 

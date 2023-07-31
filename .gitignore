@@ -1,6 +1,7 @@
 # Local package files
 **/db/*
 **/*Test.java
+fineract/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

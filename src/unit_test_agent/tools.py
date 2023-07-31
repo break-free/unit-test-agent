@@ -74,19 +74,21 @@ class RunTestSuiteTool(BaseTool):
 
         # TODO: The following command is fixed and uneditable; need to make it so the binary can be
         #       altered as needed
-        process = subprocess.run(["/var/home/chris/Projects/unit-test-agent/src/run_gradle.sh"],
+        process = subprocess.run(["./src/run_gradle.sh"],
                                  capture_output=True,
                                  text=True)
         if process.returncode != 0:
             filter_words = ['warning', 'WARNING', 'deprecated', 'BusinessDate', 'cucumber.core',
-                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a']
+                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
+                            'DEBUG']
             return "Errors were encountered\n\n" + filter_words_whitespace(process.stderr,
                                                                            filter_words)
         else:
             filter_words = ['WARNING', 'warning', 'deprecated', 'BusinessDate', 'cucumber.core',
-                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a']
-            return "Test suite output:\n\n" + filter_words_whitespace(process.stderr,
-                                                                      filter_words)
+                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
+                            'DEBUG']
+            return "No errors were encountered:\n\n" + filter_words_whitespace(process.stderr,
+                                                                               filter_words)
 
     def _arun(self):
         raise NotImplementedError("This tool does not support async")
