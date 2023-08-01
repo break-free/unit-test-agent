@@ -87,6 +87,7 @@ that now setup test suite.
 [source,bash]
 ----
 cd ..
+chmod +x ./src/run_gradle.sh
 ./src/run_gradle.sh
 ----
 
@@ -105,6 +106,7 @@ Once setup, to run the agent use the following command (from the `unit-test-agen
 
 [source,bash]
 ----
+chmod +x demo.py
 ./demo.py
 ----
 
