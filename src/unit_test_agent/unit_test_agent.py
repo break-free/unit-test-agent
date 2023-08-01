@@ -1,10 +1,10 @@
-from src.unit_test_agent.chains import CreateUnitTest
+from src.unit_test_agent.chains import CreateUnitTest, ReviewAndCorrectCode
 from src.unit_test_agent.indexer import ConfirmVectorstoreCollectionIsEmpty, GetOrCreateVectorstore, SimilaritySearchVectorstore
 from langchain.agents import initialize_agent, AgentType
 from langchain.agents.agent import AgentExecutor
 from langchain.schema import BaseMemory
 from langchain.schema.language_model import BaseLanguageModel
-from src.unit_test_agent.tools import DummyTestCoverage, SaveToNewFile, RunTestSuiteTool
+from src.unit_test_agent.tools import DummyTestCoverage, SaveToFile, RunTestSuiteTool, ReadFromLocalFile
 
 
 class UnitTestAgent():
@@ -26,7 +26,8 @@ class UnitTestAgent():
                        CreateUnitTest(llm),
                        SaveToFile(),
                        RunTestSuiteTool(),
-                       ReviewAndCorrectCode()]
+                       ReviewAndCorrectCode(llm),
+                       ReadFromLocalFile()]
 
         # initialize agent with tools
         self.agent = initialize_agent(

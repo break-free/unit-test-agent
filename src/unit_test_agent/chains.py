@@ -71,9 +71,32 @@ class ReviewAndCorrectCode(BaseTool):
         "use this tool to submit code and associated error for review and correction"
     )
     args_schema: Type[ReviewAndCorrectCodeSchema] = ReviewAndCorrectCodeSchema
+    llm: BaseLanguageModel = None
+
+    def __init__(self, llm: BaseLanguageModel):
+        super().__init__()
+        self.llm = llm
 
     def _run(self, code: str, errors: str):
-        return "Here's your code ... just kidding!"
+
+        promptTemplate = """You are a world-class Java developer with an eagle eye for unintended bugs. You review and correct unit tests. You only reply with well-commented code in a single block, without Markdown, and ready for saving to file. A corrected unit test should:
+        - Resolve any identifiable errors
+        - Focus on removing rather than adding code
+        - Be easy to read and understand, with clean code and descriptive names
+        Use the following pieces of CodeContext and Errors to review and correct the unit test.
+        ---
+        CodeContext: {code}
+        ---
+        Errors: {errors}
+        """
+
+        prompt = Prompt(template=promptTemplate,
+                        input_variables=["code", "errors"])
+        llmChain = LLMChain(prompt=prompt, llm=self.llm)
+
+        return str(llmChain.predict(prompt=prompt,
+                                    code=code,
+                                    errors=errors))
 
     def _arun(self, code: str, errors: str):
         raise NotImplementedError("This tool does not support async")

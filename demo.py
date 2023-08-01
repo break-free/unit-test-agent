@@ -32,16 +32,12 @@ if __name__ == "__main__":
     # initialize conversational memory
     conversational_memory = ConversationBufferWindowMemory(
         memory_key='chat_history',
-        k=5,
+        k=4,
         return_messages=True
     )
 
-    prompt = f"Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name and then tested, where you should identify errors but do not attempt to fix them. "
+    prompt = f"Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name and then tested, where you should identify errors and attempt to fix them. "
 
     agent = UnitTestAgent(llm, conversational_memory)
 
-    # agent.run_agent(prompt)
-
-    # Testing prompts for different tools, and to save time!!!
-    # agent.run_agent("Run the test suite tool.")
-    # agent.run_agent("Run the test suite tool and if there are errors review and fix them before re-testing.")
+    agent.run_agent(prompt)

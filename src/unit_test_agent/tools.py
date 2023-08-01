@@ -6,6 +6,7 @@ from typing import Type
 
 
 class DummyTestCoverage(BaseTool):
+
     name = "File Test Coverage Tool"
     description = (
         "use this tool to query for methods from classes within the codebase that require testing "
@@ -20,16 +21,19 @@ class DummyTestCoverage(BaseTool):
 
 
 class SaveToFileSchema(BaseModel):
-    file_path: str = Field(default="/tmp/ChangeFileName.txt",
+
+    file_path: str = Field(default="",
                            description=(
                                "file path including directory of where to save to disk and the "
-                               "file name"
+                               "file name, which should be in a standard location relative to "
+                               "the original code"
                            )
                            )
     content: str = Field(default="", description="the content that will be saved to the file")
 
 
 class SaveToFile(BaseTool):
+
     name = "Save To File Tool"
     description = (
         "use this tool to save code or text to disk using a specified file name"
@@ -37,8 +41,6 @@ class SaveToFile(BaseTool):
     args_schema: Type[SaveToFileSchema] = SaveToFileSchema
 
     def _run(self, file_path: str, content: str):
-        print("File name: " + file_path)
-
         with open(file_path, 'w') as f:
             f.write(content)
         return "File '" + str(file_path) + "' saved."
@@ -47,7 +49,23 @@ class SaveToFile(BaseTool):
         raise NotImplementedError("This tool does not support async")
 
 
+class ReadFromLocalFile(BaseTool):
+
+    name = "Read From Local File Tool"
+    description = (
+        "use this tool to read code or text from a specified file name"
+    )
+
+    def _run(self, file_path: str):
+        with open(file_path, 'r') as f:
+            return "File contents: " + f.read()
+
+    def _arun(self, file_path: str):
+        raise NotImplementedError("This tool does not support async")
+
+
 class RunTestSuiteTool(BaseTool):
+
     name = "Run Test Suite Tool"
     description = (
         "use this tool to run the test suite and obtain results about failures, errors, and exceptions"
