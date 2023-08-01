@@ -1,0 +1,138 @@
+= unit-test-agent
+
+Autonomous agent that produces unit tests for Java code base.
+
+== Description
+
+The `unit_test_agent` package permits the creation of an autonomous agent that when given a code
+base, will attempt to create unit tests based on the output of a test coverage tool. Uses Apache
+Fineract however, good be applied to other Java code bases with minor adjustments.
+
+The technologies used:
+
+* *LangChain*: Provides the underlying libraries for agents, tools, prompts, memory, and indexes.
+* *OpenJDK*: Provides the necessary libraries to compile Java code.
+* *JUnit*: Provides the test suite.
+
+Associated technologies to which this is tuned:
+
+* *Apache Fineract*: Used for demonstration purposes, to replicate an expected financial
+application. Technically any Java code base could be used however, the package is currently "tuned"
+to this application.
+* *ChatGPT*: LangChain libraries are used to interact with the code base however, other chat models
+could be utilized.
+* *Chroma DB*: LangChain libraries are used to interact with this index/vector store. Other vector
+stores could be used to achieve the same result
+
+:toc:
+
+== Installation
+
+Note these installation instructions assume you are running a Fedora Linux instance with `toolbox` installed. For other installation on other operating systems, follow the steps as executed in the
+build script.
+
+=== Download and setup environment
+
+To install and run the `demo.py` file first download the repository.
+
+[source,bash]
+----
+git clone https://github.com/break-free/unit-test-agent.git
+----
+
+Once downloaded enter the directory and run the build script. Note you need an OpenAI API key to run
+the build script; it will not run without one.
+
+[source,bash]
+----
+cd unit-test-agent
+./setup/build_unit-test-agent.sh $OPENAI_API_KEY
+----
+
+Once completed, enter the toolbox.
+
+[source,bash]
+----
+toolbox enter unit-test-agent
+----
+
+=== Setup Apache Fineract test suite
+
+Prior to running the agent, ensure that you can run and build tests. First download the Apache
+Fineract source code, setup the running of tests, and then return to the `unit-test-agent` directory
+to run the script that executes the tests. The Apache Fineract code to be downloaded is from a
+BreakFree repository, which was forked from the original at v1.8.4. Minor edits have been made to
+ease testing and reduce test output.
+
+[source,bash]
+----
+git clone https://github.com/break-free/fineract.git
+cd fineract
+docker run --name mariadb-10.8 -p 3306:3306 -e MARIADB_ROOT_PASSWORD=mysql -d mariadb:10.8
+./gradlew createDB -PdbName=fineract_tenants
+./gradlew createDB -PdbName=fineract_default
+./gradlew clean test
+----
+
+Once testing has been completed, you may remove the MariaDB container using the following command.
+
+[source,bash]
+----
+docker rm -f mariadb-10.8
+----
+
+Finally, return to the `unit-test-agent` directory to test the `run_gradle.sh` script, which runs
+that now setup test suite.
+
+[source,bash]
+----
+cd ..
+./src/run_gradle.sh
+----
+
+This should result in the tests running without errors.
+
+[NOTE]
+====
+You may encounter Cucumber errors. These are sporadic and can be ignored. If they do appear more
+often than wanted, then you may attempt to edit the `cucumber.properties` files or, if that does
+not work, the Java source code itself. *Editor Beware!*
+====
+
+== Run the Agent
+
+Once setup, to run the agent use the following command (from the `unit-test-agent` directory):
+
+[source,bash]
+----
+./demo.py
+----
+
+This will start the agent that attempts to generate unit tests and then test them. Note that at the moment the agent will not fix any errors that result from its code (a future feature).
+
+== Using the Agent
+
+The `demo.py` is one way to use the agent. This can be extended and the enclosed prompt edited to
+suit your requirements. The source code has been split up to reflect the BreakFree LLM model, and
+can also be amended to reflect your requirements.
+
+[CAUTION]
+====
+Editing the prompts is the most likely option to extend this agent. It is important when doing so
+to be careful about phrasing and the terminology used. Consistency in terms and how they are used
+within prompts is critical for the agent to understand what tools it should use when.
+====
+
+== Credits
+
+* The entire BreakFree team: for providing code, unique insights, and alternative paths of
+progression; I stand on the shoulders of giants.
+* https://github.com/langchain-ai/langchain[LangChain Project]: for creating an impressive
+collection of libraries supporting interaction with and extending large language models; you guys
+are awesome.
+* https://github.com/apache/fineract[Apache Fineract]: for creating an excellent financial
+application that we can use for testing agents.
+
+== License
+
+Refer to link:LICENSE[the license].
