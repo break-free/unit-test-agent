@@ -24,8 +24,9 @@ class UnitTestAgent():
                        GetOrCreateVectorstore(),
                        SimilaritySearchVectorstore(),
                        CreateUnitTest(llm),
-                       SaveToNewFile(),
-                       RunTestSuiteTool()]
+                       SaveToFile(),
+                       RunTestSuiteTool(),
+                       ReviewAndCorrectCode()]
 
         # initialize agent with tools
         self.agent = initialize_agent(

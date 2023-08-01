@@ -29,8 +29,8 @@ class SaveToFileSchema(BaseModel):
     content: str = Field(default="", description="the content that will be saved to the file")
 
 
-class SaveToNewFile(BaseTool):
-    name = "Save To New File Tool"
+class SaveToFile(BaseTool):
+    name = "Save To File Tool"
     description = (
         "use this tool to save code or text to disk using a specified file name"
     )
@@ -38,11 +38,7 @@ class SaveToNewFile(BaseTool):
 
     def _run(self, file_path: str, content: str):
         print("File name: " + file_path)
-        print("Content: " + content)
 
-        if os.path.isfile(file_path):
-            if os.path.getsize(file_path) > 0:
-                return "File '" + str(file_path) + "' exists and contains content!"
         with open(file_path, 'w') as f:
             f.write(content)
         return "File '" + str(file_path) + "' saved."

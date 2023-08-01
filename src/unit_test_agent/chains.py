@@ -8,6 +8,8 @@ from typing import Type
 # Fields used in schemas
 CLASS_NAME: str = Field(default="", description="the name of the class to be tested")
 CODE: str = Field(default="", description="the code that can be used to create a unit test")
+ERRORS: str = Field(default="", description="the errors by a test suite that were generated due to coding errors")
+FAILED_CODE: str = Field(default="", description="the code that failed testing and requires amendment")
 PACKAGE_NAME: str = Field(default="", description="the package that the test class must belong to")
 
 
@@ -55,4 +57,23 @@ class CreateUnitTest(BaseTool):
                                     context=code))
 
     def _arun(self, code: str):
+        raise NotImplementedError("This tool does not support async")
+
+
+class ReviewAndCorrectCodeSchema(BaseModel):
+    code: str = FAILED_CODE
+    errors: str = ERRORS
+
+
+class ReviewAndCorrectCode(BaseTool):
+    name = "Review and correct code tool"
+    description = (
+        "use this tool to submit code and associated error for review and correction"
+    )
+    args_schema: Type[ReviewAndCorrectCodeSchema] = ReviewAndCorrectCodeSchema
+
+    def _run(self, code: str, errors: str):
+        return "Here's your code ... just kidding!"
+
+    def _arun(self, code: str, errors: str):
         raise NotImplementedError("This tool does not support async")

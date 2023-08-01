@@ -40,7 +40,8 @@ if __name__ == "__main__":
 
     agent = UnitTestAgent(llm, conversational_memory)
 
-    agent.run_agent(prompt)
+    # agent.run_agent(prompt)
 
     # Testing prompts for different tools, and to save time!!!
     # agent.run_agent("Run the test suite tool.")
+    # agent.run_agent("Run the test suite tool and if there are errors review and fix them before re-testing.")
