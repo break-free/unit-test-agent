@@ -1,8 +1,20 @@
 from langchain.tools import BaseTool
-import os
 from pydantic import BaseModel, Field
 import subprocess
 from typing import Type
+
+FILE_PATH = Field(default="",
+                  description=(
+                      "file path including directory of where to save to disk and the "
+                      "file name, which should be in a standard location relative to "
+                      "the original code"
+                  )
+                  )
+CONTENT = Field(default="",
+                description=(
+                    "the content (e.g., code or text) that will be saved to a file"
+                )
+                )
 
 
 class DummyTestCoverage(BaseTool):
@@ -22,18 +34,8 @@ class DummyTestCoverage(BaseTool):
 
 class SaveToLocalFileSchema(BaseModel):
 
-    file_path: str = Field(default="",
-                           description=(
-                               "file path including directory of where to save to disk and the "
-                               "file name, which should be in a standard location relative to "
-                               "the original code"
-                           )
-                           )
-    content: str = Field(default="",
-                         description=(
-                             "the content (e.g., code or text) that will be saved to a file"
-                         )
-                         )
+    file_path: str = FILE_PATH
+    content: str = CONTENT
 
 
 class SaveToLocalFile(BaseTool):
@@ -100,7 +102,7 @@ class RunTestSuiteTool(BaseTool):
         if process.returncode != 0:
             filter_words = ['warning', 'WARNING', 'deprecated', 'BusinessDate', 'cucumber.core',
                             'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
-                            'DEBUG']
+                            'DEBUG', '> ', '* ']
             return "Errors were encountered:\n\n" + filter_words_whitespace(process.stderr,
                                                                             filter_words)
         else:
