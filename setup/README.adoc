@@ -32,7 +32,7 @@ toolbox enter unit-test-agent
 
 ---
 
-[*WARNING*]
+[WARNING]
 ====
 The windows portion of the documentation is not complete! Do not rely on it in its current state!
 ====
