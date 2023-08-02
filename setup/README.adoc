@@ -9,7 +9,8 @@ Refer to the master link:../README.adoc[README] file for additional details.
 
 == TODO
 
-[ ] Amend and then confirm that Windows installation works as expected.
+[%interactive]
+* [ ] Amend and then confirm that Windows installation works as expected.
 
 ---
 
