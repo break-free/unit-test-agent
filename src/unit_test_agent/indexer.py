@@ -8,14 +8,14 @@ from typing import Type
 
 # Fields used in schemas
 COLLECTION_NAME: str = Field(default="code_store",
-                             description="the collection name in the Chroma DB")
+                             description="the collection name in the vector store")
 DIRECTORY: str = Field(default=".",
-                       description="the directory where the code is located")
+                       description="the directory where the code base is located")
 TEXT: str = Field(default="",
-                  description="text to search for")
+                  description="text to search for in the vector store")
 
 
-class VectorstoreSchema(BaseModel):
+class VectorStoreSchema(BaseModel):
 
     # TODO: Replace these two with an actual vector store but still populate it by the agent. This
     #       way we can reuse the schema for an agent that updates the store.
@@ -23,19 +23,17 @@ class VectorstoreSchema(BaseModel):
     collection_name: str = COLLECTION_NAME
 
 
-class VectorstoreSimilaritySearchSchema(BaseModel):
+class VectorStoreSimilaritySearchSchema(BaseModel):
 
     # TODO: Replace the first variable with a vector store
     collection_name: str = COLLECTION_NAME
     text: str = TEXT
 
 
-class ConfirmVectorstoreCollectionIsEmpty(BaseTool, BaseSettings):
-    name = "Confirm Vectorstore Collection Is Empty"
-    description = (
-        "use this tool to confirm if a vectorstore and its associated collection are empty"
-        )
-    args_schema: Type[VectorstoreSchema] = VectorstoreSchema
+class ConfirmVectorStoreCollectionIsEmpty(BaseTool, BaseSettings):
+    name = "Confirm Vector Store Collection Is Empty Tool"
+    description = "use this tool to confirm if a vector store and its collection are empty"
+    args_schema: Type[VectorStoreSchema] = VectorStoreSchema
     embedding_model: str = "text-embedding-ada-002"
 
     # TODO: Use a temporary file location, e.g., /tmp/db, to store the vector store as the
@@ -48,21 +46,21 @@ class ConfirmVectorstoreCollectionIsEmpty(BaseTool, BaseSettings):
                        embedding_function=OpenAIEmbeddings(model=self.embedding_model),
                        persist_directory=self.persist_directory)
         if store._collection.count() == 0:
-            return "Vectorstore is empty."
+            return "Vector store is empty."
         else:
-            return "Vectorstore contains items."
+            return "Vector store contains items."
 
     def _arun(self, query: str):
         raise NotImplementedError("This tool does not support async")
 
 
-class GetOrCreateVectorstore(BaseTool, BaseSettings):
-    name = "Get or Create Vectorstore"
+class GetOrCreateVectorStore(BaseTool, BaseSettings):
+    name = "Get or Create Vector Store Tool"
     description = (
-        "use this tool to either create or get a Vectorstore using a provided directory containing "
-        "a codebase"
+        "use this tool to either create or get a vector store that contains a code base in the "
+        "provided directory"
     )
-    args_schema: Type[VectorstoreSchema] = VectorstoreSchema
+    args_schema: Type[VectorStoreSchema] = VectorStoreSchema
     embedding_model: str = "text-embedding-ada-002"
 
     # TODO: Use a temporary file location, e.g., /tmp/db, to store the vector store as the
@@ -76,7 +74,7 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
                        persist_directory=self.persist_directory)
 
         if store._collection.count() != 0:
-            return "Vectorstore already contains items therefore using as is."
+            return "Vector store already contains items therefore using as is."
 
         # TODO: The `+ "/src/main" is a hack to prevent this tool parsing all *.java files from
         #       both `main`, `test`, and `build` directories under `src` ; it needs to be updated
@@ -93,13 +91,11 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
                 failed_files.append(str(file) + ": " + str(e))
             if tree is not None:
                 try:
-
                     # TODO: Replace with `chunk_all` function when available.
                     chunks = chunks + JCChunker.chunk_constants(tree)
                     chunks = chunks + JCChunker.chunk_constructors(tree, codelines)
                     chunks = chunks + JCChunker.chunk_fields(tree, codelines)
                     chunks = chunks + JCChunker.chunk_methods(tree, codelines)
-
                 except JCChunker.ChunkingError as e:
                     failed_files.append(str(file) + ": " + str(e))
             else:
@@ -111,20 +107,21 @@ class GetOrCreateVectorstore(BaseTool, BaseSettings):
 
         store.add_texts(texts=str_chunks)
 
-        return "Vectorstore created and populated with data."
+        return "Vector store created and populated with data."
 
     def _arun(self, directory: str):
         raise NotImplementedError("This tool does not support async")
 
 
-class SimilaritySearchVectorstore(BaseTool, BaseSettings):
+class SimilaritySearchVectorStore(BaseTool, BaseSettings):
     name = "Similarity search in vector store"
     description = "use this tool to search a vector store collection for text"
-    args_schema: Type[VectorstoreSimilaritySearchSchema] = VectorstoreSimilaritySearchSchema
+    args_schema: Type[VectorStoreSimilaritySearchSchema] = VectorStoreSimilaritySearchSchema
     embedding_model: str = "text-embedding-ada-002"
 
     # TODO: Use a temporary file location, e.g., /tmp/db, to store the vector store as the
-    #       default.
+    #       default. Requires a bit more thought to make sure that the temp directory of either
+    #       Linux or Windows is used.
     persist_directory: str = "db"
 
     def _run(self, collection_name: str, text: str):
@@ -133,7 +130,7 @@ class SimilaritySearchVectorstore(BaseTool, BaseSettings):
                        embedding_function=OpenAIEmbeddings(model=self.embedding_model),
                        persist_directory=self.persist_directory)
 
-        return store.similarity_search(query=text, k=5)
+        return store.similarity_search(query=text, k=3)
 
     def _arun(self, collection_name: str, text: str):
         raise NotImplementedError("This tool does not support async")

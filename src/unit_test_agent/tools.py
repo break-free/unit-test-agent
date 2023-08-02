@@ -20,7 +20,7 @@ class DummyTestCoverage(BaseTool):
         raise NotImplementedError("This tool does not support async")
 
 
-class SaveToFileSchema(BaseModel):
+class SaveToLocalFileSchema(BaseModel):
 
     file_path: str = Field(default="",
                            description=(
@@ -29,16 +29,20 @@ class SaveToFileSchema(BaseModel):
                                "the original code"
                            )
                            )
-    content: str = Field(default="", description="the content that will be saved to the file")
+    content: str = Field(default="",
+                         description=(
+                             "the content (e.g., code or text) that will be saved to a file"
+                         )
+                         )
 
 
-class SaveToFile(BaseTool):
+class SaveToLocalFile(BaseTool):
 
     name = "Save To File Tool"
     description = (
-        "use this tool to save code or text to disk using a specified file name"
+        "use this tool to save content (e.g., code or text) to disk using a specified file path"
     )
-    args_schema: Type[SaveToFileSchema] = SaveToFileSchema
+    args_schema: Type[SaveToLocalFileSchema] = SaveToLocalFileSchema
 
     def _run(self, file_path: str, content: str):
         with open(file_path, 'w') as f:
@@ -53,11 +57,12 @@ class ReadFromLocalFile(BaseTool):
 
     name = "Read From Local File Tool"
     description = (
-        "use this tool to read code or text from a specified file name"
+        "use this tool to read content (e.g., code or text) from a specified file path"
     )
 
     def _run(self, file_path: str):
         with open(file_path, 'r') as f:
+            # TODO: Need to check that the file is not empty.
             return "File contents: " + f.read()
 
     def _arun(self, file_path: str):
@@ -68,7 +73,8 @@ class RunTestSuiteTool(BaseTool):
 
     name = "Run Test Suite Tool"
     description = (
-        "use this tool to run the test suite and obtain results about failures, errors, and exceptions"
+        "use this tool to run the test suite and obtain results about failures, errors, and "
+        "exceptions"
     )
 
     def _run(self):
@@ -95,8 +101,8 @@ class RunTestSuiteTool(BaseTool):
             filter_words = ['warning', 'WARNING', 'deprecated', 'BusinessDate', 'cucumber.core',
                             'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
                             'DEBUG']
-            return "Errors were encountered\n\n" + filter_words_whitespace(process.stderr,
-                                                                           filter_words)
+            return "Errors were encountered:\n\n" + filter_words_whitespace(process.stderr,
+                                                                            filter_words)
         else:
             filter_words = ['WARNING', 'warning', 'deprecated', 'BusinessDate', 'cucumber.core',
                             'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',

@@ -1,10 +1,10 @@
 from src.unit_test_agent.chains import CreateUnitTest, ReviewAndCorrectCode
-from src.unit_test_agent.indexer import ConfirmVectorstoreCollectionIsEmpty, GetOrCreateVectorstore, SimilaritySearchVectorstore
+from src.unit_test_agent.indexer import ConfirmVectorStoreCollectionIsEmpty, GetOrCreateVectorStore, SimilaritySearchVectorStore
 from langchain.agents import initialize_agent, AgentType
 from langchain.agents.agent import AgentExecutor
 from langchain.schema import BaseMemory
 from langchain.schema.language_model import BaseLanguageModel
-from src.unit_test_agent.tools import DummyTestCoverage, SaveToFile, RunTestSuiteTool, ReadFromLocalFile
+from src.unit_test_agent.tools import DummyTestCoverage, SaveToLocalFile, RunTestSuiteTool, ReadFromLocalFile
 
 
 class UnitTestAgent():
@@ -19,12 +19,14 @@ class UnitTestAgent():
         self.llm = llm
         self.conversational_memory = conversational_memory
 
+        # TODO: This could also be passed into this class as a parameter, like `llm`, so maximum
+        #       flexibility is achieved.
         agent_tools = [DummyTestCoverage(),
-                       ConfirmVectorstoreCollectionIsEmpty(),
-                       GetOrCreateVectorstore(),
-                       SimilaritySearchVectorstore(),
+                       ConfirmVectorStoreCollectionIsEmpty(),
+                       GetOrCreateVectorStore(),
+                       SimilaritySearchVectorStore(),
                        CreateUnitTest(llm),
-                       SaveToFile(),
+                       SaveToLocalFile(),
                        RunTestSuiteTool(),
                        ReviewAndCorrectCode(llm),
                        ReadFromLocalFile()]

@@ -6,11 +6,19 @@ from pydantic import BaseModel, Field
 from typing import Type
 
 # Fields used in schemas
-CLASS_NAME: str = Field(default="", description="the name of the class to be tested")
-CODE: str = Field(default="", description="the code that can be used to create a unit test")
-ERRORS: str = Field(default="", description="the errors by a test suite that were generated due to coding errors")
-FAILED_CODE: str = Field(default="", description="the code that failed testing and requires amendment")
-PACKAGE_NAME: str = Field(default="", description="the package that the test class must belong to")
+CLASS_NAME: str = Field(default="",
+                        description="the name of the class containing the method to be tested")
+CODE: str = Field(default="",
+                  description="the code that requires a new or amended unit test")
+ERRORS: str = Field(default="",
+                    description=(
+                        "the errors by a test suite that were generated due to coding errors"
+                    )
+                    )
+FAILED_CODE: str = Field(default="",
+                         description="the code that failed testing and requires amendment")
+PACKAGE_NAME: str = Field(default="",
+                          description="the package that the test class must belong to")
 
 
 class CreateUnitTestSchema(BaseModel):
@@ -81,7 +89,7 @@ class ReviewAndCorrectCode(BaseTool):
 
         promptTemplate = """You are a world-class Java developer with an eagle eye for unintended bugs. You review and correct unit tests. You only reply with well-commented code in a single block, without Markdown, and ready for saving to file. A corrected unit test should:
         - Resolve any identifiable errors
-        - Focus on removing rather than adding code
+        - Focus on removing rather than adding code but add only when necessary
         - Be easy to read and understand, with clean code and descriptive names
         Use the following pieces of CodeContext and Errors to review and correct the unit test.
         ---

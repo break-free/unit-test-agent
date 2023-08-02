@@ -1,10 +1,10 @@
 A simple toolbox script that creates a containerized development environment where this repository's code can be built and run.
 
-# Disclaimer
+## Disclaimer
 
 Refer to the master https://github.com/break-free/fineract-unit-tests-openai/blob/fix_use-token-counters/README.adoc[`README.adoc`] file for additional details.
 
-# TODO
+## TODO
 
 - [ ] **TODO:** Amend and then confirm that Windows installation works as expected.
 
