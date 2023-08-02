@@ -9,7 +9,7 @@ Refer to the master link:../README.adoc[README] file for additional details.
 
 == TODO
 
-* [ ] Amend and then confirm that Windows installation works as expected.
+[ ] Amend and then confirm that Windows installation works as expected.
 
 ---
 
@@ -23,6 +23,7 @@ Refer to the master link:../README.adoc[README] file for additional details.
 export OPENAI_API_KEY=<YOUR_KEY>
 ----
 
+[start=2]
 . Enter the code repo directory and run the `toolbox` script. Note the requirement to add both
 your OPEN API key as well as an API secret.
 
