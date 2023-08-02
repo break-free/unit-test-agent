@@ -1,3 +1,5 @@
+= Setup the development environment
+
 A simple toolbox script that creates a containerized development environment where this
 repository's code can be built and run.
 
@@ -31,11 +33,6 @@ toolbox enter unit-test-agent
 ----
 
 ---
-
-[WARNING]
-====
-The windows portion of the documentation is not complete! Do not rely on it in its current state!
-====
 
 == Windows
 
