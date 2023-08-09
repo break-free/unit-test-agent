@@ -98,19 +98,18 @@ class RunTestSuiteTool(BaseTool):
         #       altered as needed
         process = subprocess.run(["./src/run_gradle.sh"],
                                  capture_output=True,
-                                 text=True)
+                                 text=True,
+                                 shell=True)
         if process.returncode != 0:
-            filter_words = ['warning', 'WARNING', 'deprecated', 'BusinessDate', 'cucumber.core',
-                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
-                            'DEBUG', '> ', '* ']
-            return "Errors were encountered:\n\n" + filter_words_whitespace(process.stderr,
-                                                                            filter_words)
+            filter_words = ['cucumber.core', '0 Scenarios', '0 Steps', '0m0.', '--EclipseLink',
+                            'BusinessDate', 'interfaceClass', '<T>getBean(Class<T>)', 'found: ',
+                            'required: ', 'where T is a type-variable', 'RequestBody.create',
+                            'warning', 'WARNING', 'DEBUG', '* ', '> ', '^']
+            return "Errors were encountered:\n\n" + filter_words_whitespace(process.stderr + "\n" + process.stdout, filter_words)
         else:
-            filter_words = ['WARNING', 'warning', 'deprecated', 'BusinessDate', 'cucumber.core',
-                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
-                            'DEBUG']
-            return "No errors were encountered:\n\n" + filter_words_whitespace(process.stderr,
-                                                                               filter_words)
+            filter_words = ['0 Scenarios', '0 Steps', '0m0.', '--EclipseLink']
+            return "Test results below:\n\n" + filter_words_whitespace(process.stdout,
+                                                                       filter_words)
 
     def _arun(self):
         raise NotImplementedError("This tool does not support async")

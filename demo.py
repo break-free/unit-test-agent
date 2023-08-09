@@ -32,12 +32,20 @@ if __name__ == "__main__":
     # initialize conversational memory
     conversational_memory = ConversationBufferWindowMemory(
         memory_key='chat_history',
-        k=4,
+        k=3,
         return_messages=True
     )
 
     agent = UnitTestAgent(llm, conversational_memory)
 
-    prompt = f"Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name and then tested, where you should identify errors and attempt to fix them. "
+    prompt = f"Create one test class as needed for each method reported by the test coverage tool. Use the local vector store to retrieve information on the method, its class and its package as often as needed. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name and then tested. If there are any errors then attempt to fix them."
+
+    # A human in the loop prompt ##
+    # prompt = f"Create one test class as needed for each method reported by the test coverage tool. Use the local vector store to retrieve information on the method, its class and its package as often as needed. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name, checked by a human, and then tested. If there are any errors then attempt to fix them with human input. "
+
+    # prompt = f"Create one test class and as many unit tests as needed for each method reported by the test coverage tool in the same package as the method's class. Use the local vectorstore to retrieve information on the method, its class and its package as often as needed. If the vectorstore is empty, populate the vectorstore with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name and then tested, where you should identify errors and attempt to fix them. "
+
+    # Test prompts for running specific tools! ##
+    # prompt = "Run the test suite tool and report errors but do not fix them."
 
     agent.run_agent(prompt)

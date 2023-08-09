@@ -41,19 +41,21 @@ class CreateUnitTest(BaseTool):
 
     def _run(self, package_name: str, class_name: str, code: str):
 
-        promptTemplate = """You are a world-class Java developer with an eagle eye for unintended bugs and edge cases. You carefully explain code with great detail and accuracy. You write careful, accurate unit tests. You only reply with well-commented code in a single block, without Markdown, and ready for saving to file. A good unit test should:
-        - Test the function's behavior for a wide range of possible inputs
-        - Test edge cases that the author may not have foreseen
-        - Be easy to read and understand, with clean code and descriptive names
-        - Be deterministic, so that the tests always pass or fail in the same way
-        Use the following pieces of CodeContext to create a unit test.
-        ---
-        PackageName: {package_name}
-        ---
-        ClassName: {class_name}
-        ---
-        CodeContext: {context}
-        """
+        promptTemplate = (
+            "You are a world-class Java developer with an eagle eye for unintended bugs and edge " "cases. You carefully explain code with great detail and accuracy. You write careful, " "accurate unit tests. You only reply with well-commented code in a single block, "
+            "without Markdown, and ready for saving to file. A good unit test should:\n"
+            "- Test the function's behavior for a wide range of possible inputs\n"
+            "- Test edge cases that the author may not have foreseen\n"
+            "- Be easy to read and understand, with clean code and descriptive names\n"
+            "- Be deterministic, so that the tests always pass or fail in the same way\n"
+            "Use the following pieces of CodeContext to create a unit test.\n"
+            "---\n"
+            "PackageName: {package_name}\n"
+            "---\n"
+            "ClassName: {class_name}\n"
+            "---\n"
+            "CodeContext: {context}"
+        )
 
         prompt = Prompt(template=promptTemplate,
                         input_variables=["package_name", "class_name", "context"])
@@ -87,16 +89,20 @@ class ReviewAndCorrectCode(BaseTool):
 
     def _run(self, code: str, errors: str):
 
-        promptTemplate = """You are a world-class Java developer with an eagle eye for unintended bugs. You review and correct unit tests. You only reply with well-commented code in a single block, without Markdown, and ready for saving to file. A corrected unit test should:
-        - Resolve any identifiable errors
-        - Focus on removing rather than adding code but add only when necessary
-        - Be easy to read and understand, with clean code and descriptive names
-        Use the following pieces of CodeContext and Errors to review and correct the unit test.
-        ---
-        CodeContext: {code}
-        ---
-        Errors: {errors}
-        """
+        promptTemplate = (
+            "You are a world-class Java developer with an eagle eye for unintended bugs. You "
+            "review and correct unit tests. You only reply with well-commented code in a single "
+            "block, without Markdown, and ready for saving to file. A corrected unit test should:\n"
+            "- Resolve any identifiable errors\n"
+            "- Focus on removing rather than adding code but add only when necessary\n"
+            "- Be easy to read and understand, with clean code and descriptive names\n"
+            "Use the following pieces of CodeContext and Errors to review and correct the unit "
+            "test.\n"
+            "---\n"
+            "CodeContext: {code}\n"
+            "---\n"
+            "Errors: {errors}"
+        )
 
         prompt = Prompt(template=promptTemplate,
                         input_variables=["code", "errors"])
