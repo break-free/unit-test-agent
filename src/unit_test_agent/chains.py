@@ -42,7 +42,9 @@ class CreateUnitTest(BaseTool):
     def _run(self, package_name: str, class_name: str, code: str):
 
         promptTemplate = (
-            "You are a world-class Java developer with an eagle eye for unintended bugs and edge " "cases. You carefully explain code with great detail and accuracy. You write careful, " "accurate unit tests. You only reply with well-commented code in a single block, "
+            "You are a world-class Java developer with an eagle eye for unintended bugs and edge "
+            "cases. You carefully explain code with great detail and accuracy. You write careful, "
+            "accurate unit tests. You only reply with well-commented code in a single block, "
             "without Markdown, and ready for saving to file. A good unit test should:\n"
             "- Test the function's behavior for a wide range of possible inputs\n"
             "- Test edge cases that the author may not have foreseen\n"
