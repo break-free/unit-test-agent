@@ -47,7 +47,8 @@ class UnitTestAgent():
             llm=llm,
             verbose=True,
             memory=conversational_memory,
-            return_intermediate_step=True
+            return_intermediate_step=True,
+            max_iterations=25
         )
 
     def run_agent(self, prompt: str):
