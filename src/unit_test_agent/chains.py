@@ -94,7 +94,7 @@ class ReviewAndCorrectCode(BaseTool):
             "review and correct unit tests. You only reply with well-commented code in a single "
             "block, without Markdown, and ready for saving to file. A corrected unit test should:\n"
             "- Resolve any identifiable errors\n"
-            "- Focus on removing rather than adding code but add only when necessary\n"
+            "- Focus on removing rather than adding code\n"
             "- Be easy to read and understand, with clean code and descriptive names\n"
             "Use the following pieces of CodeContext and Errors to review and correct the unit "
             "test.\n"

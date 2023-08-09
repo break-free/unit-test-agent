@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from langchain.chains.conversation.memory import ConversationBufferWindowMemory
+from langchain.memory import ConversationTokenBufferMemory
 from langchain.chat_models import ChatOpenAI
 import os
 from src.unit_test_agent.unit_test_agent import UnitTestAgent
@@ -29,16 +29,17 @@ if __name__ == "__main__":
         model_name='gpt-4'
     )
 
-    # initialize conversational memory
-    conversational_memory = ConversationBufferWindowMemory(
-        memory_key='chat_history',
-        k=3,
-        return_messages=True
+    # initialize conversational memory using tokens
+    conversational_memory = ConversationTokenBufferMemory(
+        llm=llm,
+        max_token_limit=6000,
+        return_messages=True,
+        verbose=True
     )
 
     agent = UnitTestAgent(llm, conversational_memory)
 
-    prompt = f"Create one test class as needed for each method reported by the test coverage tool. Use the local vector store to retrieve information on the method, its class and its package as often as needed. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name and then tested. If there are any errors then attempt to fix them."
+    prompt = f"Create one test class as needed for each method reported by the test coverage tool. Use the local vector store to retrieve information on the method, its class and its package. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created the test class should be saved to disk using a package file name, and then tested. If there are any errors then attempt to fix them until resolved."
 
     # A human in the loop prompt ##
     # prompt = f"Create one test class as needed for each method reported by the test coverage tool. Use the local vector store to retrieve information on the method, its class and its package as often as needed. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name, checked by a human, and then tested. If there are any errors then attempt to fix them with human input. "

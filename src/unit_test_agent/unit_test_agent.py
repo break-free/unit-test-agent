@@ -26,11 +26,11 @@ class UnitTestAgent():
         agent_tools.append(ConfirmVectorStoreCollectionIsEmpty())
         agent_tools.append(GetOrCreateVectorStore())
         agent_tools.append(SimilaritySearchVectorStore())
-        agent_tools.append(CreateUnitTest(llm))
         agent_tools.append(SaveToLocalFile())
+        agent_tools.append(ReadFromLocalFile())
+        agent_tools.append(CreateUnitTest(llm))
         agent_tools.append(RunTestSuiteTool())
         agent_tools.append(ReviewAndCorrectCode(llm))
-        agent_tools.append(ReadFromLocalFile())
 
         # initialize agent with tools
         self.agent = initialize_agent(
