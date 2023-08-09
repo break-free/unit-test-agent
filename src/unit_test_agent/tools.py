@@ -103,8 +103,8 @@ class RunTestSuiteTool(BaseTool):
         if process.returncode != 0:
             filter_words = ['cucumber.core', '0 Scenarios', '0 Steps', '0m0.', '--EclipseLink',
                             'BusinessDate', 'interfaceClass', '<T>getBean(Class<T>)', 'found: ',
-                            'required: ', 'where T is a type-variable', 'RequestBody.create',
-                            'warning', 'WARNING', 'DEBUG', '* ', '> ', '^']
+                            'required: ', 'where T is a type-variable', 'warning', 'WARNING',
+                            'DEBUG', '* ', '> ', '^']
             return_string = filter_words_whitespace(process.stderr, filter_words) + "\n"
             return_string = return_string + filter_words_whitespace(process.stdout, filter_words)
             return "Errors were encountered:\n" + return_string
