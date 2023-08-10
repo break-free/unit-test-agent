@@ -49,7 +49,7 @@ class CreateUnitTest(BaseTool):
             "- Test the function's behavior for a wide range of possible inputs\n"
             "- Be easy to read and understand, with clean code and descriptive names\n"
             "- Be deterministic, so that the tests always pass or fail in the same way\n"
-            "- Does not use `assertThrows` as part the test"
+            "- Does not use `assertThrows` as part of the test"
             "Use the following pieces of CodeContext to create a unit test.\n"
             "---\n"
             "PackageName: {package_name}\n"
