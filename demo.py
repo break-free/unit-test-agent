@@ -17,12 +17,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Create a vector store to pass contextual data to an LLM prompt"
     )
-    parser.add_argument('-c',
-                        '--show-context',
-                        action='store_true',
-                        dest='show_context',
-                        help='Show the context passed to the LLM.',
-                        default=False)
     parser.add_argument('data_path',
                         help='The location of the code base.',
                         default="fineract/fineract-client",
