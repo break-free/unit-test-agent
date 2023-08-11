@@ -6,7 +6,7 @@ Autonomous agent that produces unit tests for Java code base.
 
 The `unit_test_agent` package permits the creation of an autonomous agent that when given a code
 base, will attempt to create unit tests based on the output of a test coverage tool. Uses Apache
-Fineract however, good be applied to other Java code bases with minor adjustments.
+Fineract however, could be applied to other Java code bases with minor adjustments.
 
 The technologies used:
 
@@ -111,8 +111,7 @@ chmod +x demo.py
 ./demo.py
 ----
 
-This will start the agent that attempts to generate unit tests and then test them. Note that at the
-moment the agent will not fix any errors that result from its code (a future feature).
+This will start the agent that attempts to generate unit tests, test, and then fix them.
 
 == Using the Agent
 
