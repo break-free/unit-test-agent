@@ -32,6 +32,36 @@ class DummyTestCoverage(BaseTool):
         raise NotImplementedError("This tool does not support async")
 
 
+class DummyTestCoverageMultiple(BaseTool):
+
+    name = "File Test Coverage Tool"
+    description = (
+        "use this tool to query for one method and class within the code base that requires "
+        "testing in JSON format. this tool is used multiple times until no more testing is "
+        "required."
+    )
+
+
+    returned_tests = list()
+
+    def __init__(self):
+        super().__init__()
+        self.returned_tests = [
+            '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Calls.java", class: "Calls", method: "ok" }',
+            '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Parts.java", class: "Parts", method: "fromFile" }'
+            ]
+
+    def _run(self):
+        if len(self.returned_tests) > 0:
+            print(f"Length of returned_tests : {len(self.returned_tests)}")
+            return self.returned_tests.pop()
+        else:
+            return 'No further unit tests required.'
+
+    def _arun(self):
+        raise NotImplementedError("This tool does not support async")
+
+
 class SaveToLocalFileSchema(BaseModel):
 
     file_path: str = FILE_PATH

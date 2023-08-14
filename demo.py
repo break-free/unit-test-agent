@@ -51,5 +51,6 @@ if __name__ == "__main__":
 
     # Test prompts for running specific tools! ##
     # prompt = "Run the test suite tool and report errors but do not fix them."
+    # prompt = "Return classes and methods that require additional testing."
 
     agent.run_agent(prompt)
