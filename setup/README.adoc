@@ -1,0 +1,41 @@
+= Setup the development environment
+
+A simple toolbox script that creates a containerized development environment where this
+repository's code can be built and run.
+
+== Disclaimer
+
+Refer to the master link:../README.adoc[README] file for additional details.
+
+== TODO
+
+* [ ] Amend and then confirm that Windows installation works as expected.
+
+---
+
+== Fedora OS
+
+.Steps
+. Get your OpenAI API key and add it to your environment.
+
+[source,bash]
+----
+export OPENAI_API_KEY=<YOUR_KEY>
+----
+
+[start=2]
+. Enter the code repo directory and run the `toolbox` script. Note the requirement to add both
+your OPEN API key as well as an API secret.
+
+[source,bash]
+----
+cd unit-test-agent
+setup/build_unit-test-agent.sh
+toolbox enter unit-test-agent
+----
+
+---
+
+== Windows
+
+To be completed ...

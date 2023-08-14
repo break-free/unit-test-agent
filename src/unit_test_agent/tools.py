@@ -1,11 +1,24 @@
 from langchain.tools import BaseTool
-import os
 from pydantic import BaseModel, Field
 import subprocess
 from typing import Type
 
+FILE_PATH = Field(default="",
+                  description=(
+                      "file path including directory of where to save to disk and the "
+                      "file name, which should be in a standard location relative to "
+                      "the original code"
+                  )
+                  )
+CONTENT = Field(default="",
+                description=(
+                    "the content (e.g., code or text) that will be saved to a file"
+                )
+                )
+
 
 class DummyTestCoverage(BaseTool):
+
     name = "File Test Coverage Tool"
     description = (
         "use this tool to query for methods from classes within the codebase that require testing "
@@ -19,30 +32,21 @@ class DummyTestCoverage(BaseTool):
         raise NotImplementedError("This tool does not support async")
 
 
-class SaveToFileSchema(BaseModel):
-    file_path: str = Field(default="/tmp/ChangeFileName.txt",
-                           description=(
-                               "file path including directory of where to save to disk and the "
-                               "file name"
-                           )
-                           )
-    content: str = Field(default="", description="the content that will be saved to the file")
+class SaveToLocalFileSchema(BaseModel):
+
+    file_path: str = FILE_PATH
+    content: str = CONTENT
 
 
-class SaveToNewFile(BaseTool):
-    name = "Save To New File Tool"
+class SaveToLocalFile(BaseTool):
+
+    name = "Save To File Tool"
     description = (
-        "use this tool to save code or text to disk using a specified file name"
+        "use this tool to save content (e.g., code or text) to disk using a specified file path"
     )
-    args_schema: Type[SaveToFileSchema] = SaveToFileSchema
+    args_schema: Type[SaveToLocalFileSchema] = SaveToLocalFileSchema
 
     def _run(self, file_path: str, content: str):
-        print("File name: " + file_path)
-        print("Content: " + content)
-
-        if os.path.isfile(file_path):
-            if os.path.getsize(file_path) > 0:
-                return "File '" + str(file_path) + "' exists and contains content!"
         with open(file_path, 'w') as f:
             f.write(content)
         return "File '" + str(file_path) + "' saved."
@@ -51,10 +55,28 @@ class SaveToNewFile(BaseTool):
         raise NotImplementedError("This tool does not support async")
 
 
+class ReadFromLocalFile(BaseTool):
+
+    name = "Read From Local File Tool"
+    description = (
+        "use this tool to read content (e.g., code or text) from a specified file path"
+    )
+
+    def _run(self, file_path: str):
+        with open(file_path, 'r') as f:
+            # TODO: Need to check that the file is not empty.
+            return "File contents: " + f.read()
+
+    def _arun(self, file_path: str):
+        raise NotImplementedError("This tool does not support async")
+
+
 class RunTestSuiteTool(BaseTool):
+
     name = "Run Test Suite Tool"
     description = (
-        "use this tool to run the test suite and obtain results about failures, errors, and exceptions"
+        "use this tool to run the test suite and obtain results about failures, errors, and "
+        "exceptions"
     )
 
     def _run(self):
@@ -76,19 +98,19 @@ class RunTestSuiteTool(BaseTool):
         #       altered as needed
         process = subprocess.run(["./src/run_gradle.sh"],
                                  capture_output=True,
-                                 text=True)
+                                 text=True,
+                                 shell=True)
         if process.returncode != 0:
-            filter_words = ['warning', 'WARNING', 'deprecated', 'BusinessDate', 'cucumber.core',
-                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
-                            'DEBUG']
-            return "Errors were encountered\n\n" + filter_words_whitespace(process.stderr,
-                                                                           filter_words)
+            filter_words = ['cucumber.core', '0 Scenarios', '0 Steps', '0m0.', '--EclipseLink',
+                            'BusinessDate', 'interfaceClass', '<T>getBean(Class<T>)', 'found: ',
+                            'required: ', 'where T is a type-variable', 'warning', 'WARNING',
+                            'DEBUG', '* ', '> ', '^']
+            return_string = filter_words_whitespace(process.stderr, filter_words) + "\n"
+            return_string = return_string + filter_words_whitespace(process.stdout, filter_words)
+            return "Errors were encountered:\n" + return_string
         else:
-            filter_words = ['WARNING', 'warning', 'deprecated', 'BusinessDate', 'cucumber.core',
-                            'RequestBody', 'getBean', 'found:', 'required:', 'where T is a',
-                            'DEBUG']
-            return "No errors were encountered:\n\n" + filter_words_whitespace(process.stderr,
-                                                                               filter_words)
+            filter_words = ['0 Scenarios', '0 Steps', '0m0.', '--EclipseLink']
+            return "Test results below:\n" + filter_words_whitespace(process.stdout, filter_words)
 
     def _arun(self):
         raise NotImplementedError("This tool does not support async")
