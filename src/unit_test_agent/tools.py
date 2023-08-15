@@ -53,7 +53,6 @@ class DummyTestCoverageMultiple(BaseTool):
 
     def _run(self):
         if len(self.returned_tests) > 0:
-            print(f"Length of returned_tests : {len(self.returned_tests)}")
             return self.returned_tests.pop()
         else:
             return 'No further unit tests required.'
