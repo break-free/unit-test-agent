@@ -2,6 +2,37 @@
 
 Attempting to fix the recurring Cucumber errors.
 
+== Course Tips and Tricks
+
+=== Glue package
+
+* IntelliJ will throw an error if the glue package parameter is not set in the Cucumber configuration. The glue pacakge in the example give was `io.cucumber.shouty`.
+
+=== Feature files
+
+* Feature files are where Cucumber features and their related scenarios are saved.
+* If there are no feature files, then Cucumber has nothing to do.
+* JUnit should however continue to run.
+
+The following command removes all the feature files.
+
+[bash]
+----
+Aug 17, 11:45:28, ~/Projects/unit-test-agent
+[chris@toolbox]$ find fineract/ -iname *.feature -exec rm '{}' \;
+----
+
+Re-running the simple script to test for Cucumber errors results in 0% errors.
+
+[bash]
+----
+Aug 17, 16:15:35, ~/unit-test-agent
+[fedora@toolbox]$ ./run_test_suite.sh
+The string 'FAILURE: Build failed with an exception.' occurred 0 times in 50 runs of the script './src/run_gradle.sh 2>&1'.
+----
+
+Running `./demo.py` works, and the Agent attempts to build then test new unit tests.
+
 == Directories containing Cucumber features
 
 [bash]
@@ -10,6 +41,38 @@ Aug 17, 08:42:25, ~/unit-test-agent/fineract
 [user@lhostname]$ find . -iname features
 ./fineract-provider/src/test/resources/features
 ./fineract-provider/build/classes/java/test/features
+----
+
+== Cucumber feature files
+
+[bash]
+----
+Aug 17, 08:58:07, ~/Projects/unit-test-agent 
+[chris@lemurpro]$ find ./fineract -iname *.feature
+./fineract/fineract-provider/src/test/resources/features/accounting/accounting.common.feature
+./fineract/fineract-provider/src/test/resources/features/batch/batch.builder.feature
+./fineract/fineract-provider/src/test/resources/features/commands/commands.provider.feature
+./fineract/fineract-provider/src/test/resources/features/infrastructure/infrastructure.classpath.feature
+./fineract/fineract-provider/src/test/resources/features/infrastructure/infrastructure.core.feature
+./fineract/fineract-provider/src/test/resources/features/infrastructure/infrastructure.security.utils.feature
+./fineract/fineract-provider/src/test/resources/features/infrastructure/infrastructure.sqlbuilder.feature
+./fineract/fineract-provider/src/test/resources/features/mix/mix.report.feature
+./fineract/fineract-provider/src/test/resources/features/module/modules.example.feature
+./fineract/fineract-provider/src/test/resources/features/module/modules.service.feature
+./fineract/fineract-provider/src/test/resources/features/portfolio/loanproduct.validation.feature
+./fineract/fineract-provider/src/test/resources/features/template/template.service.feature
+./fineract/fineract-provider/build/classes/java/test/features/accounting/accounting.common.feature
+./fineract/fineract-provider/build/classes/java/test/features/batch/batch.builder.feature
+./fineract/fineract-provider/build/classes/java/test/features/commands/commands.provider.feature
+./fineract/fineract-provider/build/classes/java/test/features/infrastructure/infrastructure.classpath.feature
+./fineract/fineract-provider/build/classes/java/test/features/infrastructure/infrastructure.core.feature
+./fineract/fineract-provider/build/classes/java/test/features/infrastructure/infrastructure.security.utils.feature
+./fineract/fineract-provider/build/classes/java/test/features/infrastructure/infrastructure.sqlbuilder.feature
+./fineract/fineract-provider/build/classes/java/test/features/mix/mix.report.feature
+./fineract/fineract-provider/build/classes/java/test/features/module/modules.example.feature
+./fineract/fineract-provider/build/classes/java/test/features/module/modules.service.feature
+./fineract/fineract-provider/build/classes/java/test/features/portfolio/loanproduct.validation.feature
+./fineract/fineract-provider/build/classes/java/test/features/template/template.service.feature
 ----
 
 == Cucumber Output from a typical error
