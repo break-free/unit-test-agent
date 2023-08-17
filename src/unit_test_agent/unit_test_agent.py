@@ -10,6 +10,7 @@ from langchain.agents.agent import AgentExecutor
 from langchain.schema import BaseMemory
 from langchain.schema.language_model import BaseLanguageModel
 from src.unit_test_agent.tools import DummyTestCoverage
+from src.unit_test_agent.tools import DummyTestCoverageMultiple
 from src.unit_test_agent.tools import SaveToLocalFile
 from src.unit_test_agent.tools import RunTestSuiteTool
 from src.unit_test_agent.tools import ReadFromLocalFile
@@ -30,7 +31,7 @@ class UnitTestAgent():
         # TODO: This could also be passed into this class as a parameter, like `llm`, so maximum
         #       flexibility is achieved.
         agent_tools = load_tools(["human"], llm=llm)
-        agent_tools.append(DummyTestCoverage())
+        agent_tools.append(DummyTestCoverageMultiple())
         agent_tools.append(ConfirmVectorStoreCollectionIsEmpty())
         agent_tools.append(GetOrCreateVectorStore())
         agent_tools.append(SimilaritySearchVectorStore())
@@ -48,7 +49,7 @@ class UnitTestAgent():
             verbose=True,
             memory=conversational_memory,
             return_intermediate_step=True,
-            max_iterations=25
+            max_iterations=50
         )
 
     def run_agent(self, prompt: str):
