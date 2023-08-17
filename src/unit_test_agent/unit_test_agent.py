@@ -49,7 +49,7 @@ class UnitTestAgent():
             verbose=True,
             memory=conversational_memory,
             return_intermediate_step=True,
-            max_iterations=50
+            max_iterations=100
         )
 
     def run_agent(self, prompt: str):
