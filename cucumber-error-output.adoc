@@ -31,7 +31,9 @@ Aug 17, 16:15:35, ~/unit-test-agent
 The string 'FAILURE: Build failed with an exception.' occurred 0 times in 50 runs of the script './src/run_gradle.sh 2>&1'.
 ----
 
-Running `./demo.py` works, and the Agent attempts to build then test new unit tests.
+Running `./demo.py` works, and the Agent attempts to build then test new unit tests without Cucumber errors.
+
+* [ ] This file needs to be assimilated into the README and documentation.
 
 == Directories containing Cucumber features
 
