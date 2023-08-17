@@ -77,6 +77,13 @@ docker run --name mariadb-10.8 -p 3306:3306 -e MARIADB_ROOT_PASSWORD=mysql -d ma
 
 Once testing has been completed, you may remove the MariaDB container using the following command.
 
+[NOTE]
+====
+Cucumber `*.feature` files have been removed, leaving only JUnit tests running. This was done on purpose to prevent sporadic errors (i.e., 1 in 4 test suite runs) from occurring. If additional Cucumber errors are encountered consider running the following command to remove any `*.feature` files:
+
+`find fineract/ -iname *.feature -exec rm '{}' \;`
+====
+
 [source,bash]
 ----
 docker rm -f mariadb-10.8
@@ -110,6 +117,17 @@ Once setup, to run the agent use the following command (from the `unit-test-agen
 chmod +x demo.py
 ./demo.py
 ----
+
+[Note]
+====
+The Agent uses the `fineract-client` directory by default to:
+
+* Populate the vector store.
+* Provide it with classes that require testing.
+
+Other code bases outside of this should be considered for experimentation only and are not
+guaranteed to work as expected.
+====
 
 This will start the agent that attempts to generate unit tests, test, and then fix them.
 
