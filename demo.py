@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from datetime import datetime
 from langchain.memory import ConversationTokenBufferMemory
 from langchain.chat_models import ChatOpenAI
 import os
@@ -46,12 +47,25 @@ if __name__ == "__main__":
         '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Parts.java", class: "Parts", method: "fromFile" }'
         ]
 
+    now = datetime.now()
+    print("All Agent Execution start: ", now)
+
     for test in returned_tests:
+
 
         # Create a unit test and then attempt to fix the errors #
         prompt = f"Create a test class for this class and method: `{test}`. Use the local vector store to retrieve information on the method, class and package. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created the test class should be saved to disk using an appropriate file name within `{args.data_path}`, and then tested. If there are any errors then attempt to fix them until resolved."
 
+        now = datetime.now()
+        print("Agent Execution start: ", now)
         agent.run_agent(prompt)
+        now = datetime.now()
+        print("Agent Execution finish: ", now)
+
+
+    now = datetime.now()
+    print("All Agent Execution finish: ", now)
+
 
     # A human in the loop prompt ##
     # prompt = f"Create one test class as needed for each method reported by the test coverage tool. Use the local vector store to retrieve information on the method, its class and its package as often as needed. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name, checked by a human, and then tested. If there are any errors then attempt to fix them with human input. "
