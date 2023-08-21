@@ -1,7 +1,9 @@
 from langchain import LLMChain
 from langchain.base_language import BaseLanguageModel
+from langchain.chat_models import ChatOpenAI
 from langchain.prompts import Prompt
 from langchain.tools import BaseTool
+import os
 from pydantic import BaseModel, Field
 from typing import Type
 
@@ -33,11 +35,6 @@ class CreateUnitTest(BaseTool):
         "use this tool to create a test class and unit tests for a code segment."
     )
     args_schema: Type[CreateUnitTestSchema] = CreateUnitTestSchema
-    llm: BaseLanguageModel = None
-
-    def __init__(self, llm: BaseLanguageModel):
-        super().__init__()
-        self.llm = llm
 
     def _run(self, package_name: str, class_name: str, code: str):
 
@@ -61,7 +58,13 @@ class CreateUnitTest(BaseTool):
 
         prompt = Prompt(template=promptTemplate,
                         input_variables=["package_name", "class_name", "context"])
-        llmChain = LLMChain(prompt=prompt, llm=self.llm)
+        llm = ChatOpenAI(
+            openai_api_key=os.environ['OPENAI_API_KEY'],
+            temperature=0,
+            model_name='gpt-4',
+            max_retries=20
+        )
+        llmChain = LLMChain(prompt=prompt, llm=llm)
 
         return str(llmChain.predict(prompt=prompt,
                                     package_name=package_name,
@@ -83,11 +86,6 @@ class ReviewAndCorrectCode(BaseTool):
         "use this tool to submit code and associated error for review and correction"
     )
     args_schema: Type[ReviewAndCorrectCodeSchema] = ReviewAndCorrectCodeSchema
-    llm: BaseLanguageModel = None
-
-    def __init__(self, llm: BaseLanguageModel):
-        super().__init__()
-        self.llm = llm
 
     def _run(self, code: str, errors: str):
 
@@ -107,7 +105,13 @@ class ReviewAndCorrectCode(BaseTool):
 
         prompt = Prompt(template=promptTemplate,
                         input_variables=["code", "errors"])
-        llmChain = LLMChain(prompt=prompt, llm=self.llm)
+        llm = ChatOpenAI(
+            openai_api_key=os.environ['OPENAI_API_KEY'],
+            temperature=0,
+            model_name='gpt-4',
+            max_retries=20
+        )
+        llmChain = LLMChain(prompt=prompt, llm=llm)
 
         return str(llmChain.predict(prompt=prompt,
                                     code=code,
