@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import argparse
-from datetime import datetime
 from langchain.memory import ConversationTokenBufferMemory
 from langchain.chat_models import ChatOpenAI
 import os
 from src.unit_test_agent.unit_test_agent import UnitTestAgent
 import sys
+import time
 
 if __name__ == "__main__":
 
@@ -47,24 +47,21 @@ if __name__ == "__main__":
         '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Parts.java", class: "Parts", method: "fromFile" }'
         ]
 
-    now = datetime.now()
-    print("All Agent Execution start: ", now)
+    start_all = time.time()
 
     for test in returned_tests:
-
 
         # Create a unit test and then attempt to fix the errors #
         prompt = f"Create a test class for this class and method: `{test}`. Use the local vector store to retrieve information on the method, class and package. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created the test class should be saved to disk using an appropriate file name within `{args.data_path}`, and then tested. If there are any errors then attempt to fix them until resolved."
 
-        now = datetime.now()
-        print("Agent Execution start: ", now)
+        start_agent = time.time()
         agent.run_agent(prompt)
-        now = datetime.now()
-        print("Agent Execution finish: ", now)
+        end_agent = time.time()
+        print(f"Agent Execution took: {end_agent - start_agent}")
 
 
-    now = datetime.now()
-    print("All Agent Execution finish: ", now)
+    end_all = time.time()
+    print(f"All Agent Execution took: {end_all - start_all} seconds.")
 
 
     # A human in the loop prompt ##
