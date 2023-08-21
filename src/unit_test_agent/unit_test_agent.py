@@ -37,9 +37,9 @@ class UnitTestAgent():
         agent_tools.append(SimilaritySearchVectorStore())
         agent_tools.append(SaveToLocalFile())
         agent_tools.append(ReadFromLocalFile())
-        agent_tools.append(CreateUnitTest())
+        agent_tools.append(CreateUnitTest(llm))
         agent_tools.append(RunTestSuiteTool())
-        agent_tools.append(ReviewAndCorrectCode())
+        agent_tools.append(ReviewAndCorrectCode(llm))
 
         # initialize agent with tools
         self.agent = initialize_agent(
