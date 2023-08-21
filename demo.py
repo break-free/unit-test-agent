@@ -41,8 +41,17 @@ if __name__ == "__main__":
 
     agent = UnitTestAgent(llm, conversational_memory)
 
-    # Create a unit test and then attempt to fix the errors #
-    prompt = f"Create test classes for each class and method reported by the test coverage tool until no more are provided. Use the local vector store to retrieve information on the method, its class and its package. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created the test class should be saved to disk using an appropriate file name within `{args.data_path}`, and then tested. If there are any errors then attempt to fix them until resolved."
+    returned_tests = [
+        '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Calls.java", class: "Calls", method: "ok" }',
+        '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Parts.java", class: "Parts", method: "fromFile" }'
+        ]
+
+    for test in returned_tests:
+
+        # Create a unit test and then attempt to fix the errors #
+        prompt = f"Create a test class for this class and method: `{test}`. Use the local vector store to retrieve information on the method, class and package. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created the test class should be saved to disk using an appropriate file name within `{args.data_path}`, and then tested. If there are any errors then attempt to fix them until resolved."
+
+        agent.run_agent(prompt)
 
     # A human in the loop prompt ##
     # prompt = f"Create one test class as needed for each method reported by the test coverage tool. Use the local vector store to retrieve information on the method, its class and its package as often as needed. If the vector store is empty, populate the vector store with code from the following directory '{args.data_path}'. Once created, the test class should be saved to disk using an appropriate file name, checked by a human, and then tested. If there are any errors then attempt to fix them with human input. "
@@ -54,4 +63,4 @@ if __name__ == "__main__":
     # prompt = "Run the test suite tool and report errors but do not fix them."
     # prompt = "Return classes and methods that require additional testing."
 
-    agent.run_agent(prompt)
+
