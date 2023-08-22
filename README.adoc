@@ -90,7 +90,7 @@ docker rm -f mariadb-10.8
 ----
 
 Finally, return to the `unit-test-agent` directory to test the `run_gradle.sh` script, which runs
-that now setup test suite.
+the test suite.
 
 [source,bash]
 ----
@@ -130,6 +130,11 @@ guaranteed to work as expected.
 ====
 
 This will start the agent that attempts to generate unit tests, test, and then fix them.
+
+[Note]
+====
+Currently only one test is created. To create more for demonstration purposes, then uncomment the other tests stored in the `returned_tests` list in `demo.py`.
+====
 
 == Using the Agent
 
