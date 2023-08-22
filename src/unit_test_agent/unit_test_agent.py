@@ -31,7 +31,6 @@ class UnitTestAgent():
         # TODO: This could also be passed into this class as a parameter, like `llm`, so maximum
         #       flexibility is achieved.
         agent_tools = load_tools(["human"], llm=llm)
-        agent_tools.append(DummyTestCoverageMultiple())
         agent_tools.append(ConfirmVectorStoreCollectionIsEmpty())
         agent_tools.append(GetOrCreateVectorStore())
         agent_tools.append(SimilaritySearchVectorStore())
