@@ -70,7 +70,7 @@ if __name__ == "__main__":
             print(
                 f"""Agent Total Tokens: {cb.total_tokens}, """
                 f"""Prompt Tokens: {cb.prompt_tokens}, """
-                f"""Completion Tokens: {cb.completion_tokens}, """
+                f"""Completion Tokens: {cb.completion_tokens}\n """
                 f"""Total Cost (USD): ${cb.total_cost}"""
             )
 
@@ -82,10 +82,10 @@ if __name__ == "__main__":
         end_all = time.time()
         print(f"All Agent Execution took: {end_all - start_all} seconds.")
         print(
-            f"""Agent Total Tokens: {all_agent_total_tokens}, """
+            f"""All Agents -> Total Tokens: {all_agent_total_tokens}, """
             f"""Prompt Tokens: {all_agent_prompt_tokens}, """
-            f"""Completion Tokens: {all_agent_completion_tokens}, """
-            f"""Total Cost (USD): ${all_agent_total_cost}"""
+            f"""Completion Tokens: {all_agent_completion_tokens}\n """
+            f"""All Agents -> Total Cost (USD): ${all_agent_total_cost}"""
         )
 
     # A human in the loop prompt
