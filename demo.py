@@ -28,14 +28,14 @@ if __name__ == "__main__":
     llm = ChatOpenAI(
         openai_api_key=os.environ['OPENAI_API_KEY'],
         temperature=0,
-        model_name='gpt-4',
+        model_name='gpt-4-32k',
         max_retries=20
     )
 
     # initialize conversational memory using tokens
     conversational_memory = ConversationTokenBufferMemory(
         llm=llm,
-        max_token_limit=3750,
+        max_token_limit=15000,
         return_messages=True,
         verbose=True
     )
