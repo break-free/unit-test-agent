@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # initialize conversational memory using tokens
     conversational_memory = ConversationTokenBufferMemory(
         llm=llm,
-        max_token_limit=3500,
+        max_token_limit=3400,
         return_messages=True,
         verbose=True
     )
