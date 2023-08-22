@@ -43,8 +43,9 @@ if __name__ == "__main__":
     agent = UnitTestAgent(llm, conversational_memory)
 
     returned_tests = [
+        '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Parts.java", class: "Parts", method: "fromFile" }',
         '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Calls.java", class: "Calls", method: "ok" }',
-        '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Parts.java", class: "Parts", method: "fromFile" }'
+        '[ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/CallFailedRuntimeException.java", class: "CallFailedRuntimeException", method: "message" ]'
     ]
 
     start_all = time.time()
