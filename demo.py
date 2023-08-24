@@ -91,7 +91,7 @@ if __name__ == "__main__":
             end_agent = time.time()
 
             print(
-                bcolors.BOLD + bcolors.CYAN + f"\nAgent Execution took: {end_agent - start_agent}"
+                bcolors.BOLD + bcolors.RED + f"\nAgent Execution took: {end_agent - start_agent}"
             )
             print(
                 f"""Agent Total Tokens: {cb.total_tokens}, """
@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     end_all = time.time()
 
-    print(bcolors.BOLD + bcolors.CYAN + "All Execution took: {end_all - start_all} seconds.")
+    print(bcolors.BOLD + bcolors.RED + f"All Execution took: {end_all - start_all} seconds.")
     print(
         f"""All Agents -> Total Tokens: {all_agent_total_tokens}, """
         f"""Prompt Tokens: {all_agent_prompt_tokens}, """
