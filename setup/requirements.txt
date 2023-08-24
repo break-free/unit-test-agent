@@ -1,4 +1,5 @@
 chromadb
+colorama
 data-chunker
 langchain
 llm-prompt-creator
