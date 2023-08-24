@@ -111,8 +111,10 @@ chmod +x demo.py
 ./demo.py
 ----
 
-This will start the agent that attempts to generate unit tests, test, and then fix them. Only two
-tests are generated using this file.
+This will start the agent that attempts to generate a unit test, test, and then fix it (as
+necessary). Only one test is generated using this file and it takes anywhere between four to ten
+minutes (depending on the day). This test is generated consistently hence its use in
+demonstrations.
 
 [Note]
 ====
@@ -127,8 +129,9 @@ guaranteed to work as expected.
 
 [Note]
 ====
-Currently only two tests are created. To create more for demonstration purposes, then add more to
-the `returned_tests` list in `demo.py`. Make sure that these are tested prior to any demonstration
+Currently only one test is created. To create two, uncomment the line within `returned_tests` to
+create one more. To create more than these two for demonstration purposes, then add more to the
+`returned_tests` list in `demo.py`. Make sure that these are tested prior to any demonstration
 with a client!
 ====
 
