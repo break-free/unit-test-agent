@@ -19,8 +19,8 @@ Associated technologies to which this is tuned:
 * *Apache Fineract*: Used for demonstration purposes, to replicate an expected financial
 application. Technically any Java code base could be used however, the package is currently "tuned"
 to this application.
-* *ChatGPT*: LangChain libraries are used to interact with the code base however, other chat models
-could be utilized.
+* *OpenAI ChatGPT 4.0*: LangChain libraries are used to interact with the code base however, other
+chat models could be utilized.
 * *Chroma DB*: LangChain libraries are used to interact with this index/vector store. Other vector
 stores could be used to achieve the same result
 
@@ -29,8 +29,8 @@ stores could be used to achieve the same result
 == Installation
 
 Note these installation instructions assume you are running a Fedora Linux instance with `toolbox`
-installed. For other installation on other operating systems, follow the steps as executed in the
-build script.
+installed. For installation on other operating systems, follow the steps as executed in the build
+script.
 
 === Download and setup environment
 
@@ -60,9 +60,9 @@ toolbox enter unit-test-agent
 === Setup Apache Fineract test suite
 
 Prior to running the agent, ensure that you can run and build tests. First download the Apache
-Fineract source code, setup the running of tests, and then return to the `unit-test-agent` directory
-to run the script that executes the tests. The Apache Fineract code to be downloaded is from a
-BreakFree repository, which was forked from the original at v1.8.4. Minor edits have been made to
+Fineract source code, setup the running of tests, and then return to the `unit-test-agent`
+directory to run the script that executes the tests. The Apache Fineract code to be downloaded is
+from a BreakFree repository, which was forked from the original at v1.8.4. Edits have been made to
 ease testing and reduce test output.
 
 [source,bash]
@@ -76,13 +76,6 @@ docker run --name mariadb-10.8 -p 3306:3306 -e MARIADB_ROOT_PASSWORD=mysql -d ma
 ----
 
 Once testing has been completed, you may remove the MariaDB container using the following command.
-
-[NOTE]
-====
-Cucumber `*.feature` files have been removed, leaving only JUnit tests running. This was done on purpose to prevent sporadic errors (i.e., 1 in 4 test suite runs) from occurring. If additional Cucumber errors are encountered consider running the following command to remove any `*.feature` files:
-
-`find fineract/ -iname *.feature -exec rm '{}' \;`
-====
 
 [source,bash]
 ----
@@ -103,9 +96,9 @@ This should result in the tests running without errors.
 
 [NOTE]
 ====
-You may encounter Cucumber errors. These are sporadic and can be ignored. If they do appear more
-often than wanted, then you may attempt to edit the `cucumber.properties` files or, if that does
-not work, the Java source code itself. *Editor Beware!*
+Cucumber `*.feature` files have been removed, leaving only JUnit tests running. This was done on purpose to prevent sporadic errors (i.e., 1 in 4 test suite runs) from occurring. If additional Cucumber errors are encountered consider running the following command to remove any `*.feature` files:
+
+`find fineract/ -iname *.feature -exec rm '{}' \;`
 ====
 
 == Run the Agent
@@ -118,6 +111,11 @@ chmod +x demo.py
 ./demo.py
 ----
 
+This will start the agent that attempts to generate a unit test, test, and then fix it (as
+necessary). Only one test is generated using this file and it takes anywhere between four to ten
+minutes (depending on the day). This test is generated consistently hence its use in
+demonstrations.
+
 [Note]
 ====
 The Agent uses the `fineract-client` directory by default to:
@@ -129,11 +127,12 @@ Other code bases outside of this should be considered for experimentation only a
 guaranteed to work as expected.
 ====
 
-This will start the agent that attempts to generate unit tests, test, and then fix them.
-
 [Note]
 ====
-Currently only one test is created. To create more for demonstration purposes, then uncomment the other tests stored in the `returned_tests` list in `demo.py`.
+Currently only one test is created. To create two, uncomment the line within `returned_tests` to
+create one more. To create more than these two for demonstration purposes, then add more to the
+`returned_tests` list in `demo.py`. Make sure that these are tested prior to any demonstration
+with a client!
 ====
 
 == Using the Agent
