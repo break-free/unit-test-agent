@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-from colorama import init, Fore, Back, Style
 from langchain.callbacks import get_openai_callback
 from langchain.memory import ConversationTokenBufferMemory
 from langchain.chat_models import ChatOpenAI
@@ -9,6 +8,18 @@ import os
 from src.unit_test_agent.unit_test_agent import UnitTestAgent
 import sys
 import time
+
+
+class bcolors:
+    BOLD = '\033[1m'
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    END = '\033[0m'
+
 
 if __name__ == "__main__":
 
@@ -79,12 +90,14 @@ if __name__ == "__main__":
             agent.run_agent(prompt)
             end_agent = time.time()
 
-            print(Style.BRIGHT + f"\nAgent Execution took: {end_agent - start_agent}")
             print(
-                Style.BRIGHT + """Agent Total Tokens: {cb.total_tokens}, """
+                bcolors.BOLD + bcolors.CYAN + f"\nAgent Execution took: {end_agent - start_agent}"
+            )
+            print(
+                f"""Agent Total Tokens: {cb.total_tokens}, """
                 f"""Prompt Tokens: {cb.prompt_tokens}, """
                 f"""Completion Tokens: {cb.completion_tokens}\n """
-                f"""Total Cost (USD): ${cb.total_cost}"""
+                f"""Total Cost (USD): ${cb.total_cost}""" + bcolors.END
             )
 
             all_agent_total_tokens += cb.total_tokens
@@ -94,10 +107,10 @@ if __name__ == "__main__":
 
     end_all = time.time()
 
-    print(Style.BRIGHT + "All Execution took: {end_all - start_all} seconds.")
+    print(bcolors.BOLD + bcolors.CYAN + "All Execution took: {end_all - start_all} seconds.")
     print(
-        Style.BRIGHT + """All Agents -> Total Tokens: {all_agent_total_tokens}, """
+        f"""All Agents -> Total Tokens: {all_agent_total_tokens}, """
         f"""Prompt Tokens: {all_agent_prompt_tokens}, """
         f"""Completion Tokens: {all_agent_completion_tokens}\n """
-        f"""All Agents -> Total Cost (USD): ${all_agent_total_cost}"""
+        f"""All Agents -> Total Cost (USD): ${all_agent_total_cost}""" + bcolors.END
     )
