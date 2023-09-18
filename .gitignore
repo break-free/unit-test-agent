@@ -2,6 +2,8 @@
 **/db/*
 **/*Test.java
 fineract/
+**/*.zip
+**/*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
