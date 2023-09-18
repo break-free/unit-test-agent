@@ -8,17 +8,24 @@ from typing import Type
 
 # Fields used in schemas
 COLLECTION_NAME: str = Field(default="code_store",
-                             description="the collection name in the vector store")
+                             description=(
+                                 "the collection name in the vector store"
+                             )
+                             )
 DIRECTORY: str = Field(default=".",
-                       description="the directory where the code base is located")
+                       description=(
+                           "the directory where the code base is located"
+                       )
+                       )
 TEXT: str = Field(default="",
                   description="text to search for in the vector store")
 
 
 class VectorStoreSchema(BaseModel):
 
-    # TODO: Replace these two with an actual vector store but still populate it by the agent. This
-    #       way we can reuse the schema for an agent that updates the store.
+    # TODO: Replace these two with an actual vector store but still populate it
+    #       by the agent. This way we can reuse the schema for an agent that
+    #       updates the store.
     directory: str = DIRECTORY
     collection_name: str = COLLECTION_NAME
 

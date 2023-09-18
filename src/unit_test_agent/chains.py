@@ -7,32 +7,22 @@ from typing import Type
 
 # Fields used in schemas
 CLASS_NAME: str = Field(default="",
-                        description=(
-                            """the name of the class containing the method """
-                            """to be tested"""
-                        )
+                        description="""the name of the class containing the method to be tested"""
                         )
 CODE: str = Field(default="",
-                  description=(
-                      "the code that requires a new or amended unit test"
-                  )
+                  description="the code that requires a new or amended unit test"
                   )
 ERRORS: str = Field(default="",
                     description=(
-                        """the errors by a test suite that were generated """
-                        """due to coding errors"""
+                        "the errors by a test suite that were generated due to coding """
+                        """errors"""
                     )
                     )
 FAILED_CODE: str = Field(default="",
-                         description=(
-                             """the code that failed testing and requires """ """amendment"""
-                         )
+                         description="the code that failed testing and requires amendment"
                          )
 PACKAGE_NAME: str = Field(default="",
-                          description=(
-                              """the package that the test class must belong """
-                              """to"""
-                          )
+                          description="the package that the test class must belong to"
                           )
 
 
@@ -44,9 +34,7 @@ class CreateUnitTestSchema(BaseModel):
 
 class CreateUnitTest(BaseTool):
     name = "Create Unit Test"
-    description = (
-        """use this tool to create a test class and unit tests for a code """ """segment."""
-    )
+    description = "use this tool to create a test class and unit tests for a code segment."
     args_schema: Type[CreateUnitTestSchema] = CreateUnitTestSchema
     llm: BaseLanguageModel = None
 
@@ -57,19 +45,15 @@ class CreateUnitTest(BaseTool):
     def _run(self, package_name: str, class_name: str, code: str):
 
         promptTemplate = (
-            """You are a world-class Java developer with an eagle eye for """
-            """unintended bugs and edge cases. You write careful, accurate """
-            """unit tests. You only reply with well-commented code in a """
-            """single block, without Markdown, and ready for saving to file. """
-            """A good unit test should:\n"""
-            """- Test the function's behavior for a wide range of possible """ """inputs\n"""
-            """- Be easy to read and understand, with clean code and """
-            """descriptive names\n"""
-            """- Be deterministic, so that the tests always pass or fail in """
-            """the same way\n"""
+            """You are a world-class Java developer with an eagle eye for unintended bugs and """
+            """edge cases. You write careful, accurate unit tests. You only reply with """
+            """well-commented code in a single block, without Markdown, and ready for saving to """
+            """file. A good unit test should:\n"""
+            """- Test the function's behavior for a wide range of possible inputs\n"""
+            """- Be easy to read and understand, with clean code and descriptive names\n"""
+            """- Be deterministic, so that the tests always pass or fail in the same way\n"""
             """- Does not use `assertThrows` as part of the test"""
-            """Use the following pieces of CodeContext to create a unit """
-            """test.\n"""
+            """Use the following pieces of CodeContext to create a unit test.\n"""
             """---\n"""
             """PackageName: {package_name}\n"""
             """---\n"""
@@ -79,12 +63,10 @@ class CreateUnitTest(BaseTool):
         )
 
         prompt = Prompt(template=promptTemplate,
-                        input_variables=["package_name",
-                                         "class_name",
-                                         "context"])
+                        input_variables=["package_name", "class_name", "context"])
         llmChain = LLMChain(prompt=prompt, llm=self.llm)
 
-        return str(llmChain.predict(prompt=prompt,
+        return str(llmChain.predict(prompt=prompt, 
                                     package_name=package_name,
                                     class_name=class_name,
                                     context=code))
@@ -100,9 +82,7 @@ class ReviewAndCorrectCodeSchema(BaseModel):
 
 class ReviewAndCorrectCode(BaseTool):
     name = "Review and correct code tool"
-    description = (
-        """use this tool to submit code and associated error for review and """ """correction"""
-    )
+    description = "use this tool to submit code and associated error for review and correction"
     args_schema: Type[ReviewAndCorrectCodeSchema] = ReviewAndCorrectCodeSchema
     llm: BaseLanguageModel = None
 
@@ -113,27 +93,24 @@ class ReviewAndCorrectCode(BaseTool):
     def _run(self, code: str, errors: str):
 
         promptTemplate = (
-            """You are a world-class Java developer with an eagle eye for """ """unintended bugs. You review and correct unit tests. You only """
-            """reply with well-commented code in a single block, without """
-            """Markdown, and ready for saving to file. A corrected unit test """
-            """should:\n"""
+            """You are a world-class Java developer with an eagle eye for unintended bugs. You """
+            """review and correct unit tests. You only reply with well-commented code in a """
+            """single block, without Markdown, and ready for saving to file. A corrected unit """
+            """test should:\n"""
             """- Resolve any identifiable errors\n"""
             """- Remove failing code rather than add new code when possible\n"""
-            """Use the following pieces of CodeContext and Errors to review """
-            """and correct the unit test.\n"""
+            """Use the following pieces of CodeContext and Errors to review and correct the unit """
+            """test.\n"""
             """---\n"""
             """CodeContext: {code}\n"""
             """---\n"""
             """Errors: {errors}"""
         )
 
-        prompt = Prompt(template=promptTemplate,
-                        input_variables=["code", "errors"])
+        prompt = Prompt(template=promptTemplate, input_variables=["code", "errors"])
         llmChain = LLMChain(prompt=prompt, llm=self.llm)
 
-        return str(llmChain.predict(prompt=prompt,
-                                    code=code,
-                                    errors=errors))
+        return str(llmChain.predict(prompt=prompt, code=code, errors=errors))
 
     def _arun(self, code: str, errors: str):
         raise NotImplementedError("This tool does not support async")

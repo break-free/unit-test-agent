@@ -11,9 +11,7 @@ FILE_PATH = Field(default="",
                   )
                   )
 CONTENT = Field(default="",
-                description=(
-                    "the content (e.g., code or text) that will be saved to a file"
-                )
+                description="the content (e.g., code or text) that will be saved to a file"
                 )
 
 
@@ -41,7 +39,6 @@ class DummyTestCoverageMultiple(BaseTool):
         "required."
     )
 
-
     returned_tests = list()
 
     def __init__(self):
@@ -49,7 +46,7 @@ class DummyTestCoverageMultiple(BaseTool):
         self.returned_tests = [
             '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Calls.java", class: "Calls", method: "ok" }',
             '{ file: "fineract/fineract-client/src/main/java/org/apache/fineract/client/util/Parts.java", class: "Parts", method: "fromFile" }'
-            ]
+        ]
 
     def _run(self):
         if len(self.returned_tests) > 0:
@@ -87,9 +84,7 @@ class SaveToLocalFile(BaseTool):
 class ReadFromLocalFile(BaseTool):
 
     name = "Read From Local File Tool"
-    description = (
-        "use this tool to read content (e.g., code or text) from a specified file path"
-    )
+    description = "use this tool to read content (e.g., code or text) from a specified file path"
 
     def _run(self, file_path: str):
         with open(file_path, 'r') as f:
@@ -104,15 +99,16 @@ class RunTestSuiteTool(BaseTool):
 
     name = "Run Test Suite Tool"
     description = (
-        "use this tool to run the test suite and obtain results about failures, errors, and "
-        "exceptions"
+        "use this tool to run the test suite and obtain results about "
+        "failures, errors, and exceptions"
     )
 
     def _run(self):
 
-        # TODO: This is a "hack" function added by necessity to remove additional lines and keep
-        #       context minimal. Ideally, the test suite output would be changed to reflect needs,
-        #       rather than doing it here!
+        # TODO: This is a "hack" function added by necessity to remove
+        #       additional lines and keep context minimal. Ideally, the test
+        #       suite output would be changed to reflect needs, rather than
+        #       doing it here!
         def filter_words_whitespace(text: str, filter_words: list[str]):
             # Split string by new line character.
             lines = text.split('\n')
@@ -130,9 +126,10 @@ class RunTestSuiteTool(BaseTool):
                                  text=True,
                                  shell=True)
         if process.returncode != 0:
-            filter_words = ['cucumber.core', '0 Scenarios', '0 Steps', '0m0.', '--EclipseLink',
-                            'BusinessDate', 'interfaceClass', '<T>getBean(Class<T>)', 'found: ',
-                            'required: ', 'where T is a type-variable', 'warning', 'WARNING',
+            filter_words = ['cucumber.core', '0 Scenarios', '0 Steps', '0m0.',
+                            '--EclipseLink', 'BusinessDate', 'interfaceClass',
+                            '<T>getBean(Class<T>)', 'found: ', 'required: ',
+                            'where T is a type-variable', 'warning', 'WARNING',
                             'DEBUG', '* ', '> ', '^']
             return_string = filter_words_whitespace(process.stderr, filter_words) + "\n"
             return_string = return_string + filter_words_whitespace(process.stdout, filter_words)

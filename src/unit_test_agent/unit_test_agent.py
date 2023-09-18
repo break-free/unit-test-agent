@@ -9,8 +9,6 @@ from langchain.agents import load_tools
 from langchain.agents.agent import AgentExecutor
 from langchain.schema import BaseMemory
 from langchain.schema.language_model import BaseLanguageModel
-from src.unit_test_agent.tools import DummyTestCoverage
-from src.unit_test_agent.tools import DummyTestCoverageMultiple
 from src.unit_test_agent.tools import SaveToLocalFile
 from src.unit_test_agent.tools import RunTestSuiteTool
 from src.unit_test_agent.tools import ReadFromLocalFile
@@ -28,8 +26,8 @@ class UnitTestAgent():
         self.llm = llm
         self.conversational_memory = conversational_memory
 
-        # TODO: This could also be passed into this class as a parameter, like `llm`, so maximum
-        #       flexibility is achieved.
+        # TODO: This could also be passed into this class as a parameter, like
+        #       `llm`, so maximum flexibility is achieved.
         agent_tools = load_tools(["human"], llm=llm)
         agent_tools.append(ConfirmVectorStoreCollectionIsEmpty())
         agent_tools.append(GetOrCreateVectorStore())
