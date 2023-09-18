@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
+import sys
+import time
 from langchain.callbacks import get_openai_callback
 from langchain.memory import ConversationTokenBufferMemory
 from langchain.chat_models import ChatOpenAI
-import os
 from src.unit_test_agent.unit_test_agent import UnitTestAgent
-import sys
-import time
 
 
 class bcolors:
