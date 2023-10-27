@@ -66,7 +66,7 @@ class CreateUnitTest(BaseTool):
                         input_variables=["package_name", "class_name", "context"])
         llmChain = LLMChain(prompt=prompt, llm=self.llm)
 
-        return str(llmChain.predict(prompt=prompt, 
+        return str(llmChain.predict(prompt=prompt,
                                     package_name=package_name,
                                     class_name=class_name,
                                     context=code))
