@@ -138,7 +138,7 @@ class RunTestSuiteTool(BaseTool):
             return_string = return_string + filter_words_whitespace(process.stdout, filter_words)
             return "Errors were encountered:\n" + return_string
         else:
-            filter_words = ['0 Scenarios', '0 Steps', '0m0.', '--EclipseLink', 'DEBUG']
+            filter_words = ['0 Scenarios', '0 Steps', '0m0.', '--EclipseLink', 'DEBUG', 'warning']
             return "Test results below:\n" + filter_words_whitespace(process.stdout, filter_words)
 
     def _arun(self):
