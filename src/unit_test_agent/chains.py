@@ -1,4 +1,4 @@
-from langchain import LLMChain
+from langchain.chains import LLMChain
 from langchain.base_language import BaseLanguageModel
 from langchain.prompts import Prompt
 from langchain.tools import BaseTool
