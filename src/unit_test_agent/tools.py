@@ -133,7 +133,8 @@ class RunTestSuiteTool(BaseTool):
             filter_words = ['cucumber.core', '0 Scenarios', '0 Steps', '0m0.', '--EclipseLink',
                             'BusinessDate', 'interfaceClass', '<T>getBean(Class<T>)', 'found: ',
                             'required: ', 'where T is a type-variable', 'warning', 'WARNING',
-                            'DEBUG', '* ', '\n> ', '^', 'request.getBody() != null']
+                            'DEBUG', '* What ', '> Compilation failed', '> Run with --', '^',
+                            'request.getBody() != null']
             return_string = filter_words_whitespace(process.stderr, filter_words) + "\n"
             return_string = return_string + filter_words_whitespace(process.stdout, filter_words)
             return "Errors were encountered:\n" + return_string
